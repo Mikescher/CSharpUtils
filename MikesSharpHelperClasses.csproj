@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Helper\AvgDurationWatch.cs" />
+    <Compile Include="Helper\CommandLineArguments.cs" />
     <Compile Include="Helper\FrequencyCounter.cs" />
     <Compile Include="Helper\MathExt.cs" />
     <Compile Include="Helper\TimeFormatHelper.cs" />
