@@ -177,6 +177,18 @@ namespace MSHC.Geometry
 			Y = (int)nY;
 		}
 
+		public void rotate(double rads)
+		{
+			double cosTheta = Math.Cos(rads);
+			double sinTheta = Math.Sin(rads);
+
+			double nX = cosTheta * this.X - sinTheta * this.Y;
+			double nY = sinTheta * this.X + cosTheta * this.Y;
+
+			X = (int)nX;
+			Y = (int)nY;
+		}
+
 		public override string ToString()
 		{
 			return String.Format("({0}|{1})", X, Y);
