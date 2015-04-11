@@ -48,5 +48,15 @@ namespace MSHC.Helper
 			return tmp;
 		}
 
+		public static double ToRadians(double angle)
+		{
+			return (Math.PI / 180) * angle;
+		}
+
+		private static double ToDegree(double angle)
+		{
+			return (180.0 / Math.PI) * angle;
+		}
+
 	}
 }
