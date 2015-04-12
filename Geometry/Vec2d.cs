@@ -2,7 +2,7 @@
 
 namespace MSHC.Geometry
 {
-	public class Vec2d
+	public class Vec2d : IEquatable<Vec2d>
 	{
 		public static Vec2d Zero { get { return new Vec2d(); } private set { } }
 
@@ -102,6 +102,13 @@ namespace MSHC.Geometry
 			return false;
 		}
 
+		public bool Equals(Vec2d obj)
+		{
+			if (obj == null)
+				return false;
+			return this == obj;
+		}
+
 		public override int GetHashCode()
 		{
 			return X.GetHashCode() + Y.GetHashCode();
@@ -153,7 +160,7 @@ namespace MSHC.Geometry
 			Y = py;
 		}
 
-		public void rotateAround(Vec2d centerPoint, double rads)
+		public void RotateAround(Vec2d centerPoint, double rads)
 		{
 			double cosTheta = Math.Cos(rads);
 			double sinTheta = Math.Sin(rads);
@@ -165,7 +172,7 @@ namespace MSHC.Geometry
 			Y = nY;
 		}
 
-		public void rotate(double rads)
+		public void Rotate(double rads)
 		{
 			double cosTheta = Math.Cos(rads);
 			double sinTheta = Math.Sin(rads);
