@@ -66,6 +66,7 @@
     <Compile Include="Helper\CommandLineArguments.cs" />
     <Compile Include="Helper\FrequencyCounter.cs" />
     <Compile Include="Helper\MathExt.cs" />
+    <Compile Include="Helper\ColorExt.cs" />
     <Compile Include="Helper\TimeFormatHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Rect2d.cs" />
