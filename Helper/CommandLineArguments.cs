@@ -14,62 +14,61 @@ namespace MSHC.Helper
 		{
 			Parameters = new StringDictionary();
 
-			Regex Spliter = new Regex(@"^-{1,2}|^/|=|:", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-			Regex Remover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			Regex rexSplitter = new Regex(@"^-{1,2}|^/|=|:", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			Regex rexRemover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-			string Parameter = null;
-			string[] Parts;
+			string parameter = null;
 
 			foreach (string Txt in Args)
 			{
-				Parts = Spliter.Split(Txt, 3);
+				var parts = rexSplitter.Split(Txt, 3);
 
-				switch (Parts.Length)
+				switch (parts.Length)
 				{
 					case 1:
-						if (Parameter != null)
+						if (parameter != null)
 						{
-							if (!Parameters.ContainsKey(Parameter))
+							if (!Parameters.ContainsKey(parameter))
 							{
-								Parts[0] = Remover.Replace(Parts[0], "$1");
-								Parameters.Add(Parameter, Parts[0]);
+								parts[0] = rexRemover.Replace(parts[0], "$1");
+								Parameters.Add(parameter, parts[0]);
 							}
-							Parameter = null;
+							parameter = null;
 						}
 						break;
 
 					case 2:
-						if (Parameter != null)
+						if (parameter != null)
 						{
-							if (!Parameters.ContainsKey(Parameter))
-								Parameters.Add(Parameter, "true");
+							if (!Parameters.ContainsKey(parameter))
+								Parameters.Add(parameter, "true");
 						}
-						Parameter = Parts[1];
+						parameter = parts[1];
 						break;
 
 					case 3:
-						if (Parameter != null)
+						if (parameter != null)
 						{
-							if (!Parameters.ContainsKey(Parameter))
-								Parameters.Add(Parameter, "true");
+							if (!Parameters.ContainsKey(parameter))
+								Parameters.Add(parameter, "true");
 						}
 
-						Parameter = Parts[1];
+						parameter = parts[1];
 
-						if (!Parameters.ContainsKey(Parameter))
+						if (!Parameters.ContainsKey(parameter))
 						{
-							Parts[2] = Remover.Replace(Parts[2], "$1");
-							Parameters.Add(Parameter, Parts[2]);
+							parts[2] = rexRemover.Replace(parts[2], "$1");
+							Parameters.Add(parameter, parts[2]);
 						}
 
-						Parameter = null;
+						parameter = null;
 						break;
 				}
 			}
-			if (Parameter != null)
+			if (parameter != null)
 			{
-				if (!Parameters.ContainsKey(Parameter))
-					Parameters.Add(Parameter, "true");
+				if (!Parameters.ContainsKey(parameter))
+					Parameters.Add(parameter, "true");
 			}
 		}
 
@@ -232,6 +231,76 @@ namespace MSHC.Helper
 				return null;
 
 			return ls.Select(uint.Parse).ToList();
+		}
+
+		#endregion
+
+		#region Enum
+
+		private bool TryParseEnum<T>(string input, out T value) where T : struct, IConvertible
+		{
+			T result;
+			if (Enum.TryParse(input, true, out result))
+			{
+				value = result;
+				return true;
+			}
+
+			int resultOrd;
+			if (int.TryParse(input, out resultOrd))
+			{
+				value =(T)Enum.ToObject(typeof(T), resultOrd);
+				return true;
+			}
+
+			value = default(T);
+			return false;
+		}
+
+		private T ParseEnum<T>(string p) where T : struct, IConvertible
+		{
+			T value;
+			if (TryParseEnum(p, out value))
+				return value;
+
+			throw new FormatException(string.Format("The value {0} is not a valid enum member", p));
+		}
+
+		public bool IsEnum<T>(string p) where T : struct, IConvertible
+		{
+			if (!IsSet(p)) return false;
+
+			T tmp;
+			return TryParseEnum(p, out tmp);
+		}
+
+		public T GetEnum<T>(string p) where T : struct, IConvertible
+		{
+			T value;
+			if (TryParseEnum(p, out value))
+				return value;
+
+			throw new FormatException(string.Format("The parameter {0} is not a valid enum value", p));
+		}
+
+		public T GetEnumDefault<T>(string p, T def) where T : struct, IConvertible
+		{
+			T value;
+			if (TryParseEnum(p, out value))
+				return value;
+			else
+				return def;
+		}
+
+		public List<T> GetEnumList<T>(string p, string delimiter, bool sanitize = false) where T : struct, IConvertible
+		{
+			var ls = GetStringList(p, delimiter, sanitize ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+
+			T aout;
+			if (ls.Any(pp => !TryParseEnum(pp, out aout)))
+				return null;
+
+			return ls.Select(ParseEnum<T>).ToList();
 		}
 
 		#endregion
