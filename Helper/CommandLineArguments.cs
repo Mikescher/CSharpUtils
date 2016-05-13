@@ -305,5 +305,75 @@ namespace MSHC.Helper
 
 		#endregion
 
+		#region Bool
+
+		private bool TryParseBool(string input, bool allowOrdinal, out bool value)
+		{
+			if (input.ToLower() == "true")
+			{
+				value = true;
+				return true;
+			}
+
+			if (input.ToLower() == "false")
+			{
+				value = true;
+				return true;
+			}
+
+			int resultOrd;
+			if (allowOrdinal && int.TryParse(input, out resultOrd))
+			{
+				value = (resultOrd != 0);
+				return true;
+			}
+
+			value = default(bool);
+			return false;
+		}
+
+		private bool ParseBool(string p, bool allowOrdinal = false)
+		{
+			bool value;
+			if (TryParseBool(p, allowOrdinal, out value))
+				return value;
+
+			throw new FormatException(string.Format("The value {0} is not a valid boolean value", p));
+		}
+
+		public bool IsBool(string p, bool allowOrdinal = false)
+		{
+			bool a;
+			return IsSet(p) && TryParseBool(Parameters[p], allowOrdinal, out a);
+		}
+
+		public bool GetBool(string p, bool allowOrdinal = false)
+		{
+			return ParseBool(this[p], allowOrdinal);
+		}
+
+		public bool GetBoolDefault(string p, bool def, bool allowOrdinal = false)
+		{
+			return IsBool(p, allowOrdinal) ? GetBool(p, allowOrdinal) : def;
+		}
+
+		public bool? GetBoolDefaultNull(string p, bool allowOrdinal = false)
+		{
+			return IsBool(p, allowOrdinal) ? GetBool(p, allowOrdinal) : (bool?)null;
+		}
+
+		public List<bool> GetBoolList(string p, string delimiter, bool allowOrdinal = false, bool sanitize = false)
+		{
+			var ls = GetStringList(p, delimiter, sanitize ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
+
+			bool aout;
+			if (ls.Any(pp => !TryParseBool(pp, allowOrdinal, out aout)))
+				return null;
+
+			return ls.Select(e => ParseBool(e, allowOrdinal)).ToList();
+		}
+
+		#endregion
+
 	}
 }
