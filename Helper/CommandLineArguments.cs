@@ -1,37 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedMember.Global
 namespace MSHC.Helper
 {
 	public class CommandLineArguments
 	{
-		private StringDictionary Parameters;
+		private readonly Dictionary<string, string> paramDict;
 
-		public CommandLineArguments(string[] Args)
+		public CommandLineArguments(string[] args, bool caseSensitive = true)
 		{
-			Parameters = new StringDictionary();
+			if (caseSensitive)
+				paramDict = new Dictionary<string, string>(StringComparer.CurrentCulture);
+			else
+				paramDict = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
 
-			Regex rexSplitter = new Regex(@"^-{1,2}|^/|=|:", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-			Regex rexRemover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+			var rexSplitter = new Regex(@"^-{1,2}|^/|=|:", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+			var rexRemover = new Regex(@"^['""]?(.*?)['""]?$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
 			string parameter = null;
 
-			foreach (string Txt in Args)
+			foreach (string txt in args)
 			{
-				var parts = rexSplitter.Split(Txt, 3);
+				var parts = rexSplitter.Split(txt, 3);
 
 				switch (parts.Length)
 				{
 					case 1:
 						if (parameter != null)
 						{
-							if (!Parameters.ContainsKey(parameter))
+							if (!paramDict.ContainsKey(parameter))
 							{
 								parts[0] = rexRemover.Replace(parts[0], "$1");
-								Parameters.Add(parameter, parts[0]);
+								paramDict.Add(parameter, parts[0]);
 							}
 							parameter = null;
 						}
@@ -40,8 +45,8 @@ namespace MSHC.Helper
 					case 2:
 						if (parameter != null)
 						{
-							if (!Parameters.ContainsKey(parameter))
-								Parameters.Add(parameter, "true");
+							if (!paramDict.ContainsKey(parameter))
+								paramDict.Add(parameter, "true");
 						}
 						parameter = parts[1];
 						break;
@@ -49,16 +54,16 @@ namespace MSHC.Helper
 					case 3:
 						if (parameter != null)
 						{
-							if (!Parameters.ContainsKey(parameter))
-								Parameters.Add(parameter, "true");
+							if (!paramDict.ContainsKey(parameter))
+								paramDict.Add(parameter, "true");
 						}
 
 						parameter = parts[1];
 
-						if (!Parameters.ContainsKey(parameter))
+						if (!paramDict.ContainsKey(parameter))
 						{
 							parts[2] = rexRemover.Replace(parts[2], "$1");
-							Parameters.Add(parameter, parts[2]);
+							paramDict.Add(parameter, parts[2]);
 						}
 
 						parameter = null;
@@ -67,32 +72,26 @@ namespace MSHC.Helper
 			}
 			if (parameter != null)
 			{
-				if (!Parameters.ContainsKey(parameter))
-					Parameters.Add(parameter, "true");
+				if (!paramDict.ContainsKey(parameter))
+					paramDict.Add(parameter, "true");
 			}
 		}
 
 		public bool Contains(string key)
 		{
-			return Parameters.ContainsKey(key);
+			return paramDict.ContainsKey(key);
 		}
 
 		public bool IsSet(string key)
 		{
-			return Parameters.ContainsKey(key) && Parameters[key] != null;
+			return paramDict.ContainsKey(key) && paramDict[key] != null;
 		}
 
-		public string this[string Param]
-		{
-			get
-			{
-				return (Parameters[Param]);
-			}
-		}
+		public string this[string param] => (paramDict[param]);
 
-		public bool isEmpty()
+		public bool IsEmpty()
 		{
-			return Parameters.Count == 0;
+			return paramDict.Count == 0;
 		}
 
 		#region String
@@ -102,10 +101,10 @@ namespace MSHC.Helper
 			return Contains(p) ? this[p] : def;
 		}
 
-		public List<String> GetStringList(string p, string delimiter, StringSplitOptions options = StringSplitOptions.None)
+		public List<string> GetStringList(string p, string delimiter, StringSplitOptions options = StringSplitOptions.None)
 		{
 			if (Contains(p))
-				return this[p].Split(new string[] { delimiter }, options).ToList();
+				return this[p].Split(new[] { delimiter }, options).ToList();
 			else
 				return null;
 		}
@@ -117,7 +116,7 @@ namespace MSHC.Helper
 		public bool IsLong(string p)
 		{
 			long a;
-			return IsSet(p) && long.TryParse(Parameters[p], out a);
+			return IsSet(p) && long.TryParse(paramDict[p], out a);
 		}
 
 		public long GetLong(string p)
@@ -158,7 +157,7 @@ namespace MSHC.Helper
 		public bool IsInt(string p)
 		{
 			int a;
-			return IsSet(p) && int.TryParse(Parameters[p], out a);
+			return IsSet(p) && int.TryParse(paramDict[p], out a);
 		}
 
 		public int GetInt(string p)
@@ -199,7 +198,7 @@ namespace MSHC.Helper
 		public bool IsUInt(string p)
 		{
 			uint a;
-			return IsSet(p) && uint.TryParse(Parameters[p], out a);
+			return IsSet(p) && uint.TryParse(paramDict[p], out a);
 		}
 
 		public uint GetUInt(string p)
@@ -344,7 +343,7 @@ namespace MSHC.Helper
 		public bool IsBool(string p, bool allowOrdinal = false)
 		{
 			bool a;
-			return IsSet(p) && TryParseBool(Parameters[p], allowOrdinal, out a);
+			return IsSet(p) && TryParseBool(paramDict[p], allowOrdinal, out a);
 		}
 
 		public bool GetBool(string p, bool allowOrdinal = false)
