@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MSHC</RootNamespace>
-    <AssemblyName>MikesSharpHelperClasses</AssemblyName>
+    <AssemblyName>CSharpUtils</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,26 +41,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
-    <Reference Include="Xceed.Wpf.AvalonDock">
-      <HintPath>packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
-      <HintPath>packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
-      <HintPath>packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
-      <HintPath>packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.DataGrid">
-      <HintPath>packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
-    </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\DependencyObjectExtension.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Helper\AvgDurationWatch.cs" />
     <Compile Include="Helper\CommandLineArguments.cs" />
@@ -70,19 +53,26 @@
     <Compile Include="Helper\ProcessHelper.cs" />
     <Compile Include="Helper\SerializableStringDictionary.cs" />
     <Compile Include="Helper\TimeFormatHelper.cs" />
+    <Compile Include="MVVM\MarkupExtensions\EventBindingExtension.cs" />
+    <Compile Include="MVVM\ObservableCollectionNoReset.cs" />
+    <Compile Include="MVVM\ObservableObject.cs" />
+    <Compile Include="MVVM\OneWayConverter.cs" />
+    <Compile Include="MVVM\TwoWayConverter.cs" />
+    <Compile Include="MVVM\TypedRelayCommand.cs" />
+    <Compile Include="MVVM\RelayCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Geometry\Rect2d.cs" />
     <Compile Include="Geometry\Rect2i.cs" />
     <Compile Include="Geometry\Vec2d.cs" />
     <Compile Include="Geometry\Vec2i.cs" />
+    <Compile Include="Values\VirtualKeyCodes.cs" />
+    <Compile Include="Values\WindowsHooks.cs" />
+    <Compile Include="Values\WindowsMessages.cs" />
     <Compile Include="WPFControls\ChangeMarkTextBlock.xaml.cs">
       <DependentUpon>ChangeMarkTextBlock.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPFControls\ChangeMarkTextBox.xaml.cs">
       <DependentUpon>ChangeMarkTextBox.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPFControls\CharSpinner.xaml.cs">
-      <DependentUpon>CharSpinner.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPFControls\SimpleToolbarButton.xaml.cs">
       <DependentUpon>SimpleToolbarButton.xaml</DependentUpon>
@@ -100,10 +90,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="WPFControls\CharSpinner.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="WPFControls\SimpleToolbarButton.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -116,12 +102,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
