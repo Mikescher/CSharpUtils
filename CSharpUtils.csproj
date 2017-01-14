@@ -54,10 +54,16 @@
     <Compile Include="Helper\ProcessHelper.cs" />
     <Compile Include="Helper\SerializableStringDictionary.cs" />
     <Compile Include="Helper\TimeFormatHelper.cs" />
+    <Compile Include="MVVM\BindingProxies\AbstractLegacyBinding.cs" />
+    <Compile Include="MVVM\BindingProxies\LegacyBindings.cs" />
+    <Compile Include="Reflection\EventProxy.cs" />
+    <Compile Include="MVVM\BindingProxies\IndirectProperty.cs" />
+    <Compile Include="MVVM\BindingProxies\AbstractRawBinding.cs" />
     <Compile Include="MVVM\MarkupExtensions\EventBindingExtension.cs" />
     <Compile Include="MVVM\ObservableCollectionNoReset.cs" />
     <Compile Include="MVVM\ObservableObject.cs" />
     <Compile Include="MVVM\OneWayConverter.cs" />
+    <Compile Include="MVVM\BindingProxies\RawBindings.cs" />
     <Compile Include="MVVM\TwoWayConverter.cs" />
     <Compile Include="MVVM\TypedRelayCommand.cs" />
     <Compile Include="MVVM\RelayCommand.cs" />
@@ -66,6 +72,7 @@
     <Compile Include="Geometry\Rect2i.cs" />
     <Compile Include="Geometry\Vec2d.cs" />
     <Compile Include="Geometry\Vec2i.cs" />
+    <Compile Include="Reflection\ReflectionPathResolver.cs" />
     <Compile Include="Values\VirtualKeyCodes.cs" />
     <Compile Include="Values\WindowsHooks.cs" />
     <Compile Include="Values\WindowsMessages.cs" />
