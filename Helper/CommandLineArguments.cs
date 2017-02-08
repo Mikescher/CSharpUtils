@@ -87,7 +87,7 @@ namespace MSHC.Helper
 			return paramDict.ContainsKey(key) && paramDict[key] != null;
 		}
 
-		public string this[string param] => (paramDict[param]);
+		public string this[string param] { get { return paramDict[param]; } }
 
 		public bool IsEmpty()
 		{

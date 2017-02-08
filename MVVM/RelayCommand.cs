@@ -20,7 +20,7 @@ namespace MSHC.MVVM
 		public RelayCommand(Action<object> execute, Predicate<object> canExecute = null)
 		{
 			if (execute == null)
-				throw new ArgumentNullException(nameof(execute));
+				throw new ArgumentNullException("execute");
 
 			_execute = execute;
 			_canExecute = canExecute;
@@ -29,7 +29,7 @@ namespace MSHC.MVVM
 		public RelayCommand(Action execute, Predicate<object> canExecute = null)
 		{
 			if (execute == null)
-				throw new ArgumentNullException(nameof(execute));
+				throw new ArgumentNullException("execute");
 
 			_execute = x=>execute();
 			_canExecute = canExecute;
@@ -41,7 +41,8 @@ namespace MSHC.MVVM
 
 		public bool CanExecute(object parameter)
 		{
-			return _canExecute?.Invoke(parameter) ?? true;
+			if (_canExecute == null) return true;
+			return _canExecute.Invoke(parameter);
 		}
 		
 		public event EventHandler CanExecuteChanged

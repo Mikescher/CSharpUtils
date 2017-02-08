@@ -114,7 +114,7 @@ namespace MSHC.MVVM.BindingProxies
 
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		private void ElementChanged(DependencyPropertyChangedEventArgs args)

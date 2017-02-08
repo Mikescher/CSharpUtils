@@ -188,8 +188,8 @@ namespace MSHC.MVVM.MarkupExtensions
 
 		internal static object FollowPropertyPath(object target, string path, Type valueType = null)
 		{
-			if (target == null) throw new ArgumentNullException(nameof(target));
-			if (path == null) throw new ArgumentNullException(nameof(path));
+			if (target == null) throw new ArgumentNullException("target");
+			if (path == null) throw new ArgumentNullException("path");
 
 			Type currentType = valueType ?? target.GetType();
 

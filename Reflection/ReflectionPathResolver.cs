@@ -10,7 +10,7 @@ namespace MSHC.Reflection
 		{
 			var nodes = path.Split('.');
 
-			if (nodes.Length == 0) throw new ArgumentException(nameof(path));
+			if (nodes.Length == 0) throw new ArgumentException("path");
 
 			foreach (var node in nodes.Take(nodes.Length - 1))
 			{
@@ -24,7 +24,7 @@ namespace MSHC.Reflection
 		{
 			var nodes = path.Split('.');
 
-			if (nodes.Length == 0) throw new ArgumentException(nameof(path));
+			if (nodes.Length == 0) throw new ArgumentException("path");
 
 			foreach (var node in nodes.Take(nodes.Length - 1))
 			{
@@ -38,7 +38,7 @@ namespace MSHC.Reflection
 		{
 			var nodes = path.Split('.');
 
-			if (nodes.Length == 0) throw new ArgumentException(nameof(path));
+			if (nodes.Length == 0) throw new ArgumentException("path");
 
 			foreach (var node in nodes.Take(nodes.Length - 1))
 			{
@@ -56,7 +56,7 @@ namespace MSHC.Reflection
 			var fi = o.GetType().GetField(name);
 			if (fi != null) return fi.GetValue(o);
 
-			throw new ArgumentException(nameof(name));
+			throw new ArgumentException("path");
 		}
 	}
 }
