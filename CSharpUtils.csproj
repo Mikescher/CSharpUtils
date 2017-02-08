@@ -43,8 +43,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encryption\AESThenHMAC.cs" />
+    <Compile Include="Exceptions\XMLStructureException.cs" />
     <Compile Include="Extensions\DependencyObjectExtension.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\XElementExtensions.cs" />
     <Compile Include="Helper\AvgDurationWatch.cs" />
     <Compile Include="Helper\CommandLineArguments.cs" />
     <Compile Include="Helper\DispatcherHelper.cs" />
@@ -54,8 +57,10 @@
     <Compile Include="Helper\ProcessHelper.cs" />
     <Compile Include="Helper\SerializableStringDictionary.cs" />
     <Compile Include="Helper\TimeFormatHelper.cs" />
+    <Compile Include="Helper\XHelper.cs" />
     <Compile Include="MVVM\BindingProxies\AbstractLegacyBinding.cs" />
     <Compile Include="MVVM\BindingProxies\LegacyBindings.cs" />
+    <Compile Include="MVVM\MarkupExtensions\EnumSourceExtension.cs" />
     <Compile Include="Reflection\EventProxy.cs" />
     <Compile Include="MVVM\BindingProxies\IndirectProperty.cs" />
     <Compile Include="MVVM\BindingProxies\AbstractRawBinding.cs" />
@@ -73,6 +78,8 @@
     <Compile Include="Geometry\Vec2d.cs" />
     <Compile Include="Geometry\Vec2i.cs" />
     <Compile Include="Reflection\ReflectionPathResolver.cs" />
+    <Compile Include="Threads\DelayedCombiningInvoker.cs" />
+    <Compile Include="Threads\SingleThreadPool.cs" />
     <Compile Include="Values\VirtualKeyCodes.cs" />
     <Compile Include="Values\WindowsHooks.cs" />
     <Compile Include="Values\WindowsMessages.cs" />
@@ -82,6 +89,8 @@
     <Compile Include="WPFControls\ChangeMarkTextBox.xaml.cs">
       <DependentUpon>ChangeMarkTextBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPFControls\DialogWindow.cs" />
+    <Compile Include="WPFControls\BindablePasswordBox.cs" />
     <Compile Include="WPFControls\SimpleToolbarButton.xaml.cs">
       <DependentUpon>SimpleToolbarButton.xaml</DependentUpon>
     </Compile>
