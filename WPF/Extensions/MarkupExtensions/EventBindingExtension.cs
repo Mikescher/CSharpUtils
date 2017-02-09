@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MSHC.Lang.Extensions;
+using MSHC.WPF.MVVM;
+using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
-using MSHC.Lang.Extensions;
-using MSHC.WPF.MVVM;
 
 namespace MSHC.WPF.Extensions.MarkupExtensions
 {
@@ -150,9 +150,9 @@ namespace MSHC.WPF.Extensions.MarkupExtensions
 			}
 #if DEBUG
 			throw new Exception("EventBinding path error: '" + cmdName + "' property not found on '" + vmType + "' 'DelegateCommand'");
-#endif
-
+#else
 			return null;
+#endif
 		}
 
 		private static object GetCommandParameter(FrameworkElement target, object args, string commandParameter)

@@ -12,5 +12,10 @@ namespace MSHC.WPF.MVVM
 			if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
+		protected virtual void OnExplicitPropertyChanged(string propertyName = null)
+		{
+			if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
 	}
 }

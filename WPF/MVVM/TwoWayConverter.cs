@@ -10,14 +10,26 @@ namespace MSHC.WPF.MVVM
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is TSource)) return DependencyProperty.UnsetValue;
+			if (!(value is TSource))
+			{
+				// ReSharper disable once ExpressionIsAlwaysNull
+				if (value == null && typeof (TSource).IsClass) return Convert((TSource)value, parameter);
+
+				return DependencyProperty.UnsetValue;
+			}
 
 			return Convert((TSource)value, parameter);
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			if (!(value is TTarget)) return DependencyProperty.UnsetValue;
+			if (!(value is TTarget))
+			{
+				// ReSharper disable once ExpressionIsAlwaysNull
+				if (value == null && typeof(TTarget).IsClass) return ConvertBack((TTarget)value, parameter);
+
+				return DependencyProperty.UnsetValue;
+			}
 
 			return ConvertBack((TTarget)value, parameter);
 		}
