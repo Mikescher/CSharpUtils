@@ -12,10 +12,10 @@ namespace MSHC.WPF.Extensions.BindingProxies
 	{
 		#region Properties
 
-		public static readonly DependencyProperty ElementProperty = DependencyProperty.Register("Element", typeof(FrameworkElement), typeof(AbstractLegacyBinding<TType>), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, (o, a) => ((AbstractLegacyBinding<TType>)o).ElementChanged(a)));
-		public FrameworkElement Element
+		public static readonly DependencyProperty ElementProperty = DependencyProperty.Register("Element", typeof(object), typeof(AbstractLegacyBinding<TType>), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, (o, a) => ((AbstractLegacyBinding<TType>)o).ElementChanged(a)));
+		public object Element
 		{
-			get { return (FrameworkElement)GetValue(ElementProperty); }
+			get { return GetValue(ElementProperty); }
 			set { SetValue(ElementProperty, value); }
 		}
 

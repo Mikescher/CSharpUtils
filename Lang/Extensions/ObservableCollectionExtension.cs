@@ -6,8 +6,10 @@ namespace MSHC.Lang.Extensions
 {
 	public static class ObservableCollectionExtension
 	{
-		public static void Synchronize<T>(this ObservableCollection<T> target, List<T> source)
+		public static void Synchronize<T>(this ObservableCollection<T> target, IEnumerable<T> esource)
 		{
+			var source = esource.ToList();
+
 			foreach (var v in target.Except(source))
 			{
 				target.Remove(v);

@@ -76,7 +76,7 @@ namespace MSHC.Util.Threads
 
 		public void CancelPendingRequests()
 		{
-			if (executor.IsAlive)
+			if (executor != null && executor.IsAlive)
 			{
 				cancelled = true;
 				while (executor.IsAlive)

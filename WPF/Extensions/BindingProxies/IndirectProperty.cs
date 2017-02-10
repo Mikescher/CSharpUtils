@@ -1,7 +1,6 @@
-﻿using System;
+﻿using MSHC.Lang.Reflection;
+using System;
 using System.Reflection;
-using System.Windows;
-using MSHC.Lang.Reflection;
 
 namespace MSHC.WPF.Extensions.BindingProxies
 {
@@ -26,7 +25,7 @@ namespace MSHC.WPF.Extensions.BindingProxies
 			_info.SetValue(_element, v);
 		}
 
-		public static IndirectProperty<TType> Create(FrameworkElement element, string propertyPath)
+		public static IndirectProperty<TType> Create(object element, string propertyPath)
 		{
 			try
 			{
