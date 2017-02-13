@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MSHC.Lang.Exceptions;
+using MSHC.Lang.Extensions;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using MSHC.Lang.Exceptions;
-using MSHC.Lang.Extensions;
 
 namespace MSHC.Util.Helper
 {
@@ -75,7 +75,25 @@ namespace MSHC.Util.Helper
 				return evalue;
 			}
 
-			throw new ArgumentException("'"+child.Value+"' is not a valid value for Enum");
+			throw new ArgumentException("'" + child.Value + "' is not a valid value for Enum");
+		}
+
+		public static object GetChildValue(XElement parent, string childName, object defaultValue, Type enumType)
+		{
+			var child = parent.Elements(childName).FirstOrDefault();
+			if (child == null) return defaultValue;
+
+			int value;
+			if (int.TryParse(child.Value, out value))
+			{
+				foreach (var enumValue in Enum.GetValues(enumType))
+				{
+					if (value == Convert.ToInt32(Enum.Parse(enumType, enumValue.ToString())))
+						return enumValue;
+				}
+			}
+
+			return Enum.Parse(enumType, child.Value);
 		}
 
 		#endregion
