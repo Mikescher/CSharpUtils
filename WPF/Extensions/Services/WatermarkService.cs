@@ -19,10 +19,10 @@ namespace MSHC.WPF.Extensions.Services
 		/// Watermark Attached Dependency Property
 		/// </summary>
 		public static readonly DependencyProperty WatermarkProperty = DependencyProperty.RegisterAttached(
-		   "Watermark",
-		   typeof(object),
-		   typeof(WatermarkService),
-		   new FrameworkPropertyMetadata((object)null, new PropertyChangedCallback(OnWatermarkChanged)));
+			"Watermark",
+			typeof(object),
+			typeof(WatermarkService),
+			new FrameworkPropertyMetadata(null, OnWatermarkChanged));
 
 		#region Private Fields
 
@@ -99,14 +99,8 @@ namespace MSHC.WPF.Extensions.Services
 		private static void Control_GotKeyboardFocus(object sender, RoutedEventArgs e)
 		{
 			Control c = (Control)sender;
-			if (ShouldShowWatermark(c))
-			{
-				ShowWatermark(c);
-			}
-			else
-			{
-				RemoveWatermark(c);
-			}
+
+			RemoveWatermark(c);
 		}
 
 		/// <summary>

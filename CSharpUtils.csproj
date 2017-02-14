@@ -34,6 +34,8 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,6 +45,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WPF\Controls\ClickSelectTextBox.cs" />
+    <Compile Include="WPF\Extensions\Methods\CollectionViewExtension.cs" />
     <Compile Include="Lang\Extensions\ObservableCollectionExtension.cs" />
     <Compile Include="Math\Encryption\AESThenHMAC.cs" />
     <Compile Include="Lang\Exceptions\XMLStructureException.cs" />
@@ -59,6 +63,9 @@
     <Compile Include="Util\Helper\SerializableStringDictionary.cs" />
     <Compile Include="Util\Helper\TimeFormatHelper.cs" />
     <Compile Include="Util\Helper\XHelper.cs" />
+    <Compile Include="WPF\Controls\FontBox.xaml.cs">
+      <DependentUpon>FontBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Extensions\BindingProxies\AbstractLegacyBinding.cs" />
     <Compile Include="WPF\Extensions\BindingProxies\LegacyBindings.cs" />
     <Compile Include="WPF\Extensions\MarkupExtensions\EnumSourceExtension.cs" />
@@ -109,6 +116,10 @@
     <Page Include="WPF\Controls\ChangeMarkTextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="WPF\Controls\FontBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="WPF\Controls\SimpleToolbarButton.xaml">
       <Generator>MSBuild:Compile</Generator>
