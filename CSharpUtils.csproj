@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lang\Collections\ProjectionComparer.cs" />
+    <Compile Include="Math\Encryption\PKBDF2.cs" />
+    <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="WPF\Controls\ClickSelectTextBox.cs" />
     <Compile Include="WPF\Extensions\Methods\CollectionViewExtension.cs" />
     <Compile Include="Lang\Extensions\ObservableCollectionExtension.cs" />
