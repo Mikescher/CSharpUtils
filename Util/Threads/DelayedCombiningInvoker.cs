@@ -9,7 +9,7 @@ namespace MSHC.Util.Threads
 
 		private readonly Action action;
 		private readonly int delay;
-		private readonly int mayDelay;
+		private readonly int maxDelay;
 
 		private Thread executor;
 		private long lastRequestTime = -1;
@@ -20,7 +20,7 @@ namespace MSHC.Util.Threads
 		{
 			action = a;
 			delay = d;
-			mayDelay = md;
+			maxDelay = md;
 		}
 
 		public static DelayedCombiningInvoker Create(Action a, int delay, int maxDelay)
@@ -63,7 +63,7 @@ namespace MSHC.Util.Threads
 					long durationLast = Environment.TickCount - lastRequestTime;
 					long durationTotal = Environment.TickCount - initialRequestTime;
 
-					if (durationLast > delay || durationTotal > initialRequestTime)
+					if (durationLast > delay || durationTotal > maxDelay)
 					{
 						action();
 						return;
@@ -85,6 +85,11 @@ namespace MSHC.Util.Threads
 				}
 				cancelled = false;
 			}
+		}
+
+		public bool HasPendingRequests()
+		{
+			return (executor != null && executor.IsAlive);
 		}
 	}
 }
