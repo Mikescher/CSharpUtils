@@ -55,6 +55,14 @@ namespace MSHC.Util.Helper
 			return Guid.Parse(child.Value);
 		}
 
+		public static double GetChildValue(XElement parent, string childName, double defaultValue)
+		{
+			var child = parent.Elements(childName).FirstOrDefault();
+			if (child == null) return defaultValue;
+
+			return double.Parse(child.Value);
+		}
+
 		public static TEnumType GetChildValue<TEnumType>(XElement parent, string childName, TEnumType defaultValue) where TEnumType : struct, IComparable, IFormattable, IConvertible
 		{
 			var child = parent.Elements(childName).FirstOrDefault();

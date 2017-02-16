@@ -76,6 +76,8 @@
     <Compile Include="WPF\Extensions\BindingProxies\IndirectProperty.cs" />
     <Compile Include="WPF\Extensions\BindingProxies\AbstractRawBinding.cs" />
     <Compile Include="WPF\Extensions\MarkupExtensions\EventBindingExtension.cs" />
+    <Compile Include="WPF\Extensions\Services\ConditionalDataTemplate.cs" />
+    <Compile Include="WPF\Extensions\Services\MultiDatatemplateService.cs" />
     <Compile Include="WPF\Extensions\Services\WatermarkAdorner.cs" />
     <Compile Include="WPF\Extensions\Services\WatermarkService.cs" />
     <Compile Include="WPF\MVVM\ObservableCollectionNoReset.cs" />
