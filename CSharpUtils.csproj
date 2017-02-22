@@ -46,9 +46,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lang\Collections\ProjectionComparer.cs" />
+    <Compile Include="Math\Encryption\AESEncryption.cs" />
     <Compile Include="Math\Encryption\EncodingConverter.cs" />
     <Compile Include="Math\Encryption\PBKDF2.cs" />
-    <Compile Include="Network\GZWebClient.cs" />
+    <Compile Include="Network\GZWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="WPF\Controls\ClickSelectTextBox.cs" />
     <Compile Include="WPF\Extensions\Methods\CollectionViewExtension.cs" />
