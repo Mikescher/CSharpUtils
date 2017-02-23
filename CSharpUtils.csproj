@@ -49,6 +49,7 @@
     <Compile Include="Math\Encryption\AESEncryption.cs" />
     <Compile Include="Math\Encryption\EncodingConverter.cs" />
     <Compile Include="Math\Encryption\PBKDF2.cs" />
+    <Compile Include="Network\CompactJsonFormatter.cs" />
     <Compile Include="Network\GZWebClient.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -219,6 +219,13 @@ namespace MSHC.Util.Helper
 			return attr.Value;
 		}
 
+		public static int GetAttributeInt(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return int.Parse(attr.Value);
+		}
+
 		#endregion
 	}
 }
