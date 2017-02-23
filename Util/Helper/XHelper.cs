@@ -202,5 +202,23 @@ namespace MSHC.Util.Helper
 			}
 			return builder.ToString();
 		}
+
+		#region GetAttribute
+
+		public static Guid GetAttributeGuid(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return Guid.Parse(attr.Value);
+		}
+
+		public static string GetAttributeString(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return attr.Value;
+		}
+
+		#endregion
 	}
 }

@@ -9,7 +9,7 @@ namespace MSHC.Math.Encryption
 		{
 			if (iv == null) iv = new byte[16];
 
-			using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC })
+			using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7 })
 			using (var memoryStream = new MemoryStream(data))
 			using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read))
 			{
@@ -23,6 +23,23 @@ namespace MSHC.Math.Encryption
 					}
 					return ms.ToArray();
 				}
+			}
+		}
+
+		public static byte[] EncryptCBC256(byte[] message, byte[] key, byte[] iv)
+		{
+			if (iv == null) iv = new byte[16];
+
+			using (var rj = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7})
+			using (var ms = new MemoryStream())
+			using (CryptoStream cs = new CryptoStream(ms, rj.CreateEncryptor(key, iv), CryptoStreamMode.Write))
+			{
+				using (StreamWriter sw = new StreamWriter(cs))
+				{
+					sw.Write(message);
+					sw.Close();
+				}
+				return ms.ToArray();
 			}
 		}
 	}
