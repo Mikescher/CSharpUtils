@@ -30,14 +30,13 @@ namespace MSHC.Math.Encryption
 		{
 			if (iv == null) iv = new byte[16];
 
-			using (var rj = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7})
+			using (var rj = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7 })
 			using (var ms = new MemoryStream())
-			using (CryptoStream cs = new CryptoStream(ms, rj.CreateEncryptor(key, iv), CryptoStreamMode.Write))
 			{
-				using (StreamWriter sw = new StreamWriter(cs))
+				using (CryptoStream cs = new CryptoStream(ms, rj.CreateEncryptor(key, iv), CryptoStreamMode.Write))
 				{
-					sw.Write(message);
-					sw.Close();
+					cs.Write(message, 0, message.Length);
+					cs.Close();
 				}
 				return ms.ToArray();
 			}

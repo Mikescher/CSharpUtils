@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Xml.Linq;
 using MSHC.Lang.Exceptions;
 
-namespace MSHC.Lang.Extensions
+namespace MSHC.Serialization
 {
 	public static class XElementExtensions
 	{

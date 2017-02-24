@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MSHC.Lang.Extensions
+namespace MSHC.Lang.Collections
 {
 	public static class ListExtensions
 	{

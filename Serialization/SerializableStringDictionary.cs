@@ -5,7 +5,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
-namespace MSHC.Util.Helper
+namespace MSHC.Serialization
 {
 	[Serializable]
 	[XmlRoot("dictionary")]

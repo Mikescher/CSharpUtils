@@ -1,5 +1,4 @@
-﻿using MSHC.Lang.Extensions;
-using MSHC.WPF.MVVM;
+﻿using MSHC.WPF.MVVM;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;

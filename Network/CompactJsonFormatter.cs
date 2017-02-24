@@ -5,6 +5,7 @@ namespace MSHC.Network
 	public static class CompactJsonFormatter
 	{
 		private const string INDENT_STRING = "  ";
+
 		public static string FormatJSON(string str, int maxIndent)
 		{
 			var indent = 0;
@@ -27,6 +28,16 @@ namespace MSHC.Network
 						{
 							indent++;
 							if (indent >= maxIndent) break;
+							bool empty = true;
+							int ffwd = 1;
+							for (; i + ffwd < str.Length; i++)
+							{
+								if (str[i + ffwd] == ' ' || str[i + ffwd] == '\t' || str[i + ffwd] == '\r' || str[i + ffwd] == '\n') continue;
+								if (str[i + ffwd] == ']' || str[i + ffwd] == '}') break;
+								empty = false;
+								break;
+							}
+							if (empty) { i += ffwd; sb.Append(str[i]); indent--; last = str[i]; break; }
 							sb.AppendLine();
 							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
 							last = ' ';
@@ -62,6 +73,7 @@ namespace MSHC.Network
 							if (indent >= maxIndent) { sb.Append(' '); last = ' '; break; }
 							sb.AppendLine();
 							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							last = ' ';
 						}
 						break;
 					case ':':
@@ -90,7 +102,6 @@ namespace MSHC.Network
 			}
 			return sb.ToString();
 		}
-
 
 		public static string CompressJson(string str, int compressionLevel)
 		{
