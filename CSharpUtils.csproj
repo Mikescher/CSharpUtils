@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lang\Collections\ProjectionComparer.cs" />
+    <Compile Include="Lang\Collections\VoidObservableCollection.cs" />
     <Compile Include="Math\Encryption\AESEncryption.cs" />
     <Compile Include="Math\Encryption\EncodingConverter.cs" />
     <Compile Include="Math\Encryption\PBKDF2.cs" />
