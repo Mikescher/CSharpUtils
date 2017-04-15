@@ -46,17 +46,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Lang\Collections\ProjectionComparer.cs" />
+    <Compile Include="Lang\Collections\VoidObservableCollection.cs" />
+    <Compile Include="Math\Encryption\AESEncryption.cs" />
     <Compile Include="Math\Encryption\EncodingConverter.cs" />
     <Compile Include="Math\Encryption\PBKDF2.cs" />
+    <Compile Include="Network\CompactJsonFormatter.cs" />
+    <Compile Include="Network\GZWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="WPF\Controls\ClickSelectTextBox.cs" />
-    <Compile Include="WPF\Extensions\Methods\CollectionViewExtension.cs" />
-    <Compile Include="Lang\Extensions\ObservableCollectionExtension.cs" />
+    <Compile Include="WPF\CollectionViewExtension.cs" />
+    <Compile Include="Lang\Collections\CollectionExtension.cs" />
     <Compile Include="Math\Encryption\AESThenHMAC.cs" />
     <Compile Include="Lang\Exceptions\XMLStructureException.cs" />
-    <Compile Include="Lang\Extensions\DependencyObjectExtension.cs" />
-    <Compile Include="Lang\Extensions\ListExtensions.cs" />
-    <Compile Include="Lang\Extensions\XElementExtensions.cs" />
+    <Compile Include="WPF\DependencyObjectExtension.cs" />
+    <Compile Include="Lang\Collections\ListExtensions.cs" />
+    <Compile Include="Serialization\XElementExtensions.cs" />
     <Compile Include="Util\Helper\AvgDurationWatch.cs" />
     <Compile Include="Util\Helper\CommandLineArguments.cs" />
     <Compile Include="Util\Helper\DispatcherHelper.cs" />
@@ -64,9 +70,9 @@
     <Compile Include="Util\Helper\MathExt.cs" />
     <Compile Include="Util\Helper\ColorExt.cs" />
     <Compile Include="Util\Helper\ProcessHelper.cs" />
-    <Compile Include="Util\Helper\SerializableStringDictionary.cs" />
+    <Compile Include="Serialization\SerializableStringDictionary.cs" />
     <Compile Include="Util\Helper\TimeFormatHelper.cs" />
-    <Compile Include="Util\Helper\XHelper.cs" />
+    <Compile Include="Serialization\XHelper.cs" />
     <Compile Include="WPF\Controls\FontBox.xaml.cs">
       <DependentUpon>FontBox.xaml</DependentUpon>
     </Compile>

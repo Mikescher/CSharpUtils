@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace MSHC.Lang.Extensions
+namespace MSHC.WPF
 {
 	// https://github.com/JonghoL/EventBindingMarkup/blob/master/src/EventBinding/MVVM/DependencyObjectExtensions.cs
 	public static class DependencyObjectExtensions

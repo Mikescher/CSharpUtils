@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace MSHC.WPF.Extensions.Methods
+namespace MSHC.WPF
 {
 	public static class CollectionViewExtension
 	{

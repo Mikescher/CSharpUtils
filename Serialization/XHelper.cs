@@ -1,13 +1,12 @@
-﻿using MSHC.Lang.Exceptions;
-using MSHC.Lang.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
+using MSHC.Lang.Exceptions;
 
-namespace MSHC.Util.Helper
+namespace MSHC.Serialization
 {
 	public static class XHelper
 	{
@@ -110,24 +109,19 @@ namespace MSHC.Util.Helper
 
 		public static string GetChildValueString(XElement parent, string childName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
-
-			return child.Value;
+			return GetChildOrThrow(parent, childName).Value;
 		}
 
 		public static int GetChildValueInt(XElement parent, string childName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			return int.Parse(child.Value);
 		}
 
 		public static int? GetChildValueNint(XElement parent, string childName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			if (child.Value.Trim() == "") return null;
 
@@ -136,24 +130,21 @@ namespace MSHC.Util.Helper
 
 		public static bool GetChildValueBool(XElement parent, string childName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			return XElementExtensions.ParseBool(child.Value);
 		}
 
 		public static Guid GetChildValueGUID(XElement parent, string childName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			return Guid.Parse(child.Value);
 		}
 
 		public static TEnumType GetChildValueEnum<TEnumType>(XElement parent, string childName) where TEnumType : struct, IComparable, IFormattable, IConvertible
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			int value;
 			TEnumType evalue;
@@ -175,21 +166,26 @@ namespace MSHC.Util.Helper
 
 		public static List<string> GetChildValueStringList(XElement parent, string childName, string subNodeName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			return child.Elements(subNodeName).Select(p => p.Value).ToList();
 		}
 
 		public static DateTimeOffset GetChildValueDateTimeOffset(XElement parent, string childName)
 		{
-			var child = parent.Elements(childName).FirstOrDefault();
-			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			var child = GetChildOrThrow(parent, childName);
 
 			return DateTimeOffset.Parse(child.Value);
 		}
 
 		#endregion
+
+		public static XElement GetChildOrThrow(XElement parent, string childName)
+		{
+			var child = parent.Elements(childName).FirstOrDefault();
+			if (child == null) throw new XMLStructureException("Node not found: " + childName);
+			return child;
+		}
 
 		public static string ConvertToString(XDocument doc)
 		{
@@ -202,5 +198,38 @@ namespace MSHC.Util.Helper
 			}
 			return builder.ToString();
 		}
+
+		#region GetAttribute
+
+		public static Guid GetAttributeGuid(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return Guid.Parse(attr.Value);
+		}
+
+		public static Guid? GetAttributeNGuid(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			if (string.IsNullOrWhiteSpace(attr.Value) || attr.Value.ToLower() == "null") return null;
+			return Guid.Parse(attr.Value);
+		}
+
+		public static string GetAttributeString(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return attr.Value;
+		}
+
+		public static int GetAttributeInt(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return int.Parse(attr.Value);
+		}
+
+		#endregion
 	}
 }
