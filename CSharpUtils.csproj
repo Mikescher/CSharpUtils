@@ -54,6 +54,7 @@
     <Compile Include="Network\GZWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Serialization\Linx.cs" />
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="WPF\Controls\ClickSelectTextBox.cs" />
     <Compile Include="WPF\CollectionViewExtension.cs" />
