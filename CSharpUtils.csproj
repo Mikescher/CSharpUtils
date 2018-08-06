@@ -91,6 +91,7 @@
     <Compile Include="WPF\MVVM\ObservableObject.cs" />
     <Compile Include="WPF\MVVM\OneWayConverter.cs" />
     <Compile Include="WPF\Extensions\BindingProxies\RawBindings.cs" />
+    <Compile Include="WPF\MVVM\RangeEnabledObservableCollection.cs" />
     <Compile Include="WPF\MVVM\TwoWayConverter.cs" />
     <Compile Include="WPF\MVVM\TypedRelayCommand.cs" />
     <Compile Include="WPF\MVVM\RelayCommand.cs" />
