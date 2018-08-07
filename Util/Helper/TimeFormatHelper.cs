@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace MSHC.Util.Helper
 {
 	public static class TimeFormatHelper
 	{
-		public static string FormatTimespan(TimeSpan ts)
+		public static string FormatMilliseconds(long v, bool forceMinutes = false)
 		{
-			var parts = string
-							.Format("{0}d:{1}h:{2}m:{3}s:{4}ms", ts.Days, ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds)
-							.Split(':')
-							.SkipWhile(s => Regex.Match(s, @"0\w").Success); // skip zero-valued components
+			if (v < 0) return string.Empty; 
 
-			var join = string.Join(" ", parts);
+			var minutes = (int)(v / 1000f / 60f);
+			var seconds = (int)((v - minutes * 1000 * 60) / 1000f);
+			var millis = v - minutes * 1000 * 60 - seconds * 1000;
 
-			if (join == "")
-				join = "0ms";
-
-			return join;
+			if (forceMinutes)
+				return string.Format("{0}m {1}s {2}ms", minutes, seconds, millis);
+			else if (minutes > 0)
+				return string.Format("{0}m {1:00}s {2}ms", minutes, seconds, millis);
+			else if (seconds>0)
+				return string.Format("{0}s {1}ms", seconds, millis);
+			else
+				return string.Format("{1}ms", seconds, millis);
 		}
 
-		public static string FormatMilliseconds(long ms)
-		{
-			return FormatTimespan(TimeSpan.FromMilliseconds(ms));
-		}
+		public static string FormatTimespan(TimeSpan t) => FormatMilliseconds((long)t.TotalMilliseconds);
 	}
 }
