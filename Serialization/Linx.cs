@@ -13,6 +13,12 @@ namespace MSHC.Serialization
 			return r;
 		}
 
+		/// <summary>
+		/// ["x", "y"]               Get value of <y> node, with parent <x>
+		/// ["x", "y", ".attr"]      Get attributevalue of attribute "attr" on node "y"
+		/// ["x", "y@attr=3"]        Get value of <y> node where the attribute "attr" has the value 3
+		/// ["x", "y@attr=~"]        Get value of <y> node where the attribute "attr" exists
+		/// </summary>
 		public static IEnumerable<string> XList(XContainer x, params string[] p)
 		{
 			var search = p[0];
