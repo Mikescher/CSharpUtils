@@ -23,5 +23,28 @@ namespace MSHC.Util.Helper
 		}
 
 		public static string FormatTimespan(TimeSpan t) => FormatMilliseconds((long)t.TotalMilliseconds);
+		
+		public static string FormatMillisecondsTwoParts(long v)
+		{
+			if (v < 0) return string.Empty; 
+
+			var hours = (int)(v / 1000f / 60f / 60f);
+			v -= hours * 60 * 60 * 1000;
+
+			var minutes = (int)(v / 1000f / 60f);
+			v -= minutes * 60 * 1000;
+
+			var seconds = (int)(v / 1000f);
+			v -= seconds * 1000;
+
+			var millis = v;
+
+			if (hours>0)   return $"{hours}h {minutes:00}m";
+			if (minutes>0) return $"{minutes:0}m {seconds:00}s";
+			if (seconds>0) return $"{seconds:0}s {millis:000}ms";
+			if (millis>0)  return $"{millis:0}ms";
+
+			return "0ms";
+		}
 	}
 }
