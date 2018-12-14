@@ -45,6 +45,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSharpUtils.cs" />
     <Compile Include="Lang\Attributes\EnumDescriptorAttribute.cs" />
     <Compile Include="Lang\Collections\LimitedDictionary.cs" />
     <Compile Include="Lang\Collections\ObservableCollectionWithClearEvents.cs" />
@@ -76,6 +77,32 @@
     <Compile Include="WPF\CollectionViewExtension.cs" />
     <Compile Include="Lang\Collections\CollectionExtension.cs" />
     <Compile Include="Lang\Exceptions\XMLStructureException.cs" />
+    <Compile Include="WPF\Converter\Boolean\IsNotNull.cs" />
+    <Compile Include="WPF\Converter\Boolean\IsNull.cs" />
+    <Compile Include="WPF\Converter\Boolean\MultiBoolOperator.cs" />
+    <Compile Include="WPF\Converter\Boolean\NegateBool.cs" />
+    <Compile Include="WPF\Converter\Number\Subtract.cs" />
+    <Compile Include="WPF\Converter\String\TextToLines.cs" />
+    <Compile Include="WPF\Converter\DateTime\TodayDateTimeToDisplay.cs" />
+    <Compile Include="WPF\Converter\Other\BoolToColor.cs" />
+    <Compile Include="WPF\Converter\Other\BoolToFontWeight.cs" />
+    <Compile Include="WPF\Converter\Visibility\BoolToVisibility.cs" />
+    <Compile Include="WPF\Converter\DateTime\DateOnlyToDisplay.cs" />
+    <Compile Include="WPF\Converter\DateTime\DateTimeToDisplay.cs" />
+    <Compile Include="WPF\Converter\DateTime\DTOToDisplay.cs" />
+    <Compile Include="WPF\Converter\Visibility\EmptyToVisibility.cs" />
+    <Compile Include="WPF\Converter\Other\EnumToDescription.cs" />
+    <Compile Include="WPF\Converter\Boolean\EnumValueToBoolean.cs" />
+    <Compile Include="WPF\Converter\String\GetStringLine.cs" />
+    <Compile Include="WPF\Converter\Other\GridLengthToDouble.cs" />
+    <Compile Include="WPF\Converter\Visibility\InvertedBoolToVisibility.cs" />
+    <Compile Include="WPF\Converter\Visibility\IsNullToVisibility.cs" />
+    <Compile Include="WPF\Converter\Visibility\MultiBoolToVisibility.cs" />
+    <Compile Include="WPF\Converter\DateTime\SmallDateTimeToDisplay.cs" />
+    <Compile Include="WPF\Converter\DateTime\SmartDateTimeToDisplay.cs" />
+    <Compile Include="WPF\Converter\String\StringCoalesce.cs" />
+    <Compile Include="WPF\Converter\String\StringIsNotWhitespace.cs" />
+    <Compile Include="WPF\Converter\String\SubstringLeft.cs" />
     <Compile Include="WPF\DependencyObjectExtension.cs" />
     <Compile Include="Serialization\XElementExtensions.cs" />
     <Compile Include="Util\Helper\AvgDurationWatch.cs" />
