@@ -365,11 +365,32 @@ namespace MSHC.Util.Helper
 		{
 			var ls = GetStringList(p, delimiter, sanitize ? StringSplitOptions.RemoveEmptyEntries : StringSplitOptions.None);
 
-			bool aout;
-			if (ls.Any(pp => !TryParseBool(pp, allowOrdinal, out aout)))
-				return null;
+			if (ls.Any(pp => !TryParseBool(pp, allowOrdinal, out _))) return null;
 
 			return ls.Select(e => ParseBool(e, allowOrdinal)).ToList();
+		}
+
+		#endregion
+
+		#region Version
+
+		public bool IsVersion(string p)
+		{
+			return IsSet(p) && Version.TryParse(paramDict[p], out _);
+		}
+
+		public Version GetVersion(string p, bool allowOrdinal = false)
+		{
+			return Version.Parse(this[p]);
+		}
+
+		public Version GetVersionDefault(string p, Version def)
+		{
+			if (!Contains(p)) return def;
+
+			if (Version.TryParse(this[p], out var v)) return v;
+
+			return def;
 		}
 
 		#endregion

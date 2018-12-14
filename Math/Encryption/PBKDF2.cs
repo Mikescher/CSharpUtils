@@ -20,7 +20,7 @@ namespace MSHC.Math.Encryption
 				case HMACType.SHA512:
 					return new HMACSHA512(key);
 				default:
-					throw new ArgumentOutOfRangeException("func", func, null);
+					throw new ArgumentOutOfRangeException(nameof(func), func, null);
 			}
 		}
 

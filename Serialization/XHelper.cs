@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using MSHC.Lang.Exceptions;
+using MSHC.Serialization;
 
-namespace MSHC.Serialization
+namespace AlephNote.PluginInterface.Util
 {
 	public static class XHelper
 	{
@@ -54,12 +57,21 @@ namespace MSHC.Serialization
 			return Guid.Parse(child.Value);
 		}
 
+		public static Guid? GetChildValue(XElement parent, string childName, Guid? defaultValue)
+		{
+			var child = parent.Elements(childName).FirstOrDefault();
+			if (child == null) return defaultValue;
+			if (string.IsNullOrWhiteSpace(child.Value)) return defaultValue;
+
+			return Guid.Parse(child.Value);
+		}
+
 		public static double GetChildValue(XElement parent, string childName, double defaultValue)
 		{
 			var child = parent.Elements(childName).FirstOrDefault();
 			if (child == null) return defaultValue;
 
-			return double.Parse(child.Value);
+			return double.Parse(child.Value, NumberStyles.Float, CultureInfo.InvariantCulture);
 		}
 
 		public static TEnumType GetChildValue<TEnumType>(XElement parent, string childName, TEnumType defaultValue) where TEnumType : struct, IComparable, IFormattable, IConvertible
@@ -110,6 +122,16 @@ namespace MSHC.Serialization
 		public static string GetChildValueString(XElement parent, string childName)
 		{
 			return GetChildOrThrow(parent, childName).Value;
+		}
+
+		public static string GetChildValueStringOrDefault(XElement parent, string childName, string def)
+		{
+			return GetChildOrNull(parent, childName)?.Value ?? def;
+		}
+
+		public static string GetChildBase64String(XElement parent, string childName)
+		{
+			return ConvertFromC80Base64(GetChildOrThrow(parent, childName).Value);
 		}
 
 		public static int GetChildValueInt(XElement parent, string childName)
@@ -175,7 +197,7 @@ namespace MSHC.Serialization
 		{
 			var child = GetChildOrThrow(parent, childName);
 
-			return DateTimeOffset.Parse(child.Value);
+			return DateTimeOffset.Parse(child.Value, CultureInfo.InvariantCulture);
 		}
 
 		#endregion
@@ -186,17 +208,77 @@ namespace MSHC.Serialization
 			if (child == null) throw new XMLStructureException("Node not found: " + childName);
 			return child;
 		}
-
-		public static string ConvertToString(XDocument doc)
+		
+		public static XElement GetChildOrNull(XElement parent, string childName)
 		{
-			if (doc == null) throw new ArgumentNullException("doc");
+			return parent.Elements(childName).FirstOrDefault();
+		}
+
+		public static bool HasChild(XElement parent, string childName)
+		{
+			return parent.Elements(childName).Any();
+		}
+
+		public static string ConvertToStringFormatted(XDocument doc)
+		{
+			if (doc == null) throw new ArgumentNullException(nameof(doc));
 
 			StringBuilder builder = new StringBuilder();
 			using (TextWriter writer = new StringWriter(builder))
 			{
 				doc.Save(writer);
 			}
-			return builder.ToString();
+
+			var lines = Regex.Split(builder.ToString(), @"\r?\n");
+			if (lines.Any()) lines[0] = lines[0].Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			return string.Join(Environment.NewLine, lines);
+		}
+
+		public static string ConvertToStringRaw(XDocument doc)
+		{
+			if (doc == null) throw new ArgumentNullException(nameof(doc));
+
+			return "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n" + doc.ToString(SaveOptions.DisableFormatting);
+		}
+
+		public static string ConvertToStringRaw(XElement xel)
+		{
+			return xel.ToString(SaveOptions.DisableFormatting);
+		}
+
+		public static string ConvertToC80Base64(string content, int indent = 8, int indentLast = 6)
+		{
+			var chunks = ChunkSplit(Convert.ToBase64String(Encoding.UTF8.GetBytes(content)), 80).ToList();
+
+			if (chunks.Count == 1) return chunks[0];
+
+			var i1 = new string(' ', indent);
+			var i2 = new string(' ', indentLast);
+			return "\n" + string.Join("", chunks.Select(c => i1 + c + '\n')) + i2;
+		}
+
+		public static string ConvertFromC80Base64(string content)
+		{
+			return Encoding.UTF8.GetString(Convert.FromBase64String(content.Replace("\r", "").Replace("\n", "").Replace(" ", "").Replace("\t", "")));
+		}
+
+		public static IEnumerable<string> ChunkSplit(string str, int maxChunkSize)
+		{
+			for (int i = 0; i < str.Length; i += maxChunkSize)
+				yield return str.Substring(i, Math.Min(maxChunkSize, str.Length - i));
+		}
+
+		public static IEnumerable<XElement> GetChildrenOrEmpty(XElement parent, string childName, string subChildName)
+		{
+			var child = GetChildOrNull(parent, childName);
+			if (child == null) return Enumerable.Empty<XElement>(); ;
+
+			return child.Elements(subChildName);
+		}
+
+		public static string ToString(DateTimeOffset o)
+		{
+			return o.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz", CultureInfo.InvariantCulture);
 		}
 
 		#region GetAttribute
@@ -228,6 +310,36 @@ namespace MSHC.Serialization
 			var attr = elem.Attribute(attrname);
 			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
 			return int.Parse(attr.Value);
+		}
+
+		public static DateTime GetAttributeDateTime(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return DateTime.Parse(attr.Value);
+		}
+
+		public static TEnumType GetAttributeEnum<TEnumType>(XElement elem, string attrname) where TEnumType : struct, IComparable, IFormattable, IConvertible
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+
+			int value;
+			TEnumType evalue;
+			if (int.TryParse(attr.Value, out value))
+			{
+				foreach (var enumValue in Enum.GetValues(typeof(TEnumType)))
+				{
+					if (value == Convert.ToInt32(Enum.Parse(typeof(TEnumType), enumValue.ToString())))
+						return (TEnumType)enumValue;
+				}
+			}
+			if (Enum.TryParse(attr.Value, true, out evalue))
+			{
+				return evalue;
+			}
+
+			throw new ArgumentException("'" + attr.Value + "' is not a valid value for Enum");
 		}
 
 		#endregion

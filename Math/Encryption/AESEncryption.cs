@@ -8,20 +8,27 @@ namespace MSHC.Math.Encryption
 		public static byte[] DecryptCBC256(byte[] data, byte[] key, byte[] iv)
 		{
 			if (iv == null) iv = new byte[16];
-
-			using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7 })
-			using (var memoryStream = new MemoryStream(data))
-			using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read))
+			
+			using (var rj = Aes.Create())
 			{
-				byte[] buffer = new byte[16 * 1024];
-				using (MemoryStream ms = new MemoryStream())
+				rj.Key = key;
+				rj.IV = iv;
+				rj.Mode = CipherMode.CBC;
+				rj.Padding = PaddingMode.PKCS7;
+
+				using (var memoryStream = new MemoryStream(data))
+				using (var cryptoStream = new CryptoStream(memoryStream, rj.CreateDecryptor(key, iv), CryptoStreamMode.Read))
 				{
-					int read;
-					while ((read = cryptoStream.Read(buffer, 0, buffer.Length)) > 0)
+					byte[] buffer = new byte[16 * 1024];
+					using (MemoryStream ms = new MemoryStream())
 					{
-						ms.Write(buffer, 0, read);
+						int read;
+						while ((read = cryptoStream.Read(buffer, 0, buffer.Length)) > 0)
+						{
+							ms.Write(buffer, 0, read);
+						}
+						return ms.ToArray();
 					}
-					return ms.ToArray();
 				}
 			}
 		}
@@ -30,15 +37,23 @@ namespace MSHC.Math.Encryption
 		{
 			if (iv == null) iv = new byte[16];
 
-			using (var rj = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7 })
-			using (var ms = new MemoryStream())
+			using (var rj = Aes.Create())
 			{
-				using (CryptoStream cs = new CryptoStream(ms, rj.CreateEncryptor(key, iv), CryptoStreamMode.Write))
+				rj.Key = key;
+				rj.IV = iv;
+				rj.Mode = CipherMode.CBC;
+				rj.Padding = PaddingMode.PKCS7;
+
+				using (var ms = new MemoryStream())
 				{
-					cs.Write(message, 0, message.Length);
-					cs.Close();
+					using (CryptoStream cs = new CryptoStream(ms, rj.CreateEncryptor(key, iv), CryptoStreamMode.Write))
+					{
+						cs.Write(message, 0, message.Length);
+						cs.Flush();
+					}
+					return ms.ToArray();
 				}
-				return ms.ToArray();
+
 			}
 		}
 	}

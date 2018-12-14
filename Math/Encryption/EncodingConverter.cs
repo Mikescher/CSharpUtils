@@ -47,7 +47,7 @@ namespace MSHC.Math.Encryption
 
 			byte[] arr = new byte[hex.Length >> 1];
 
-			for (int i = 0; i < hex.Length >> 1; ++i)
+			for (int i = 0; i < (hex.Length >> 1); ++i)
 			{
 				arr[i] = (byte)((GetHexValCaseInsensitive(hex[i << 1]) << 4) + GetHexValCaseInsensitive(hex[(i << 1) + 1]));
 			}
@@ -69,7 +69,7 @@ namespace MSHC.Math.Encryption
 
 			byte[] arr = new byte[hex.Length >> 1];
 
-			for (int i = 0; i < hex.Length >> 1; ++i)
+			for (int i = 0; i < (hex.Length >> 1); ++i)
 			{
 				arr[i] = (byte)((GetHexValUppercase(hex[i << 1]) << 4) + GetHexValUppercase(hex[(i << 1) + 1]));
 			}
@@ -91,7 +91,7 @@ namespace MSHC.Math.Encryption
 
 			byte[] arr = new byte[hex.Length >> 1];
 
-			for (int i = 0; i < hex.Length >> 1; ++i)
+			for (int i = 0; i < (hex.Length >> 1); ++i)
 			{
 				arr[i] = (byte)((GetHexValLowercase(hex[i << 1]) << 4) + GetHexValLowercase(hex[(i << 1) + 1]));
 			}

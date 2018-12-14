@@ -8,7 +8,7 @@ namespace MSHC.WPF.MVVM
 	public class ObservableCollectionNoReset<T> : ObservableCollection<T>
 	{
 		// Some CollectionChanged listeners don't support range actions.
-		public Boolean RangeActionsSupported { get; set; }
+		public bool RangeActionsSupported { get; set; }
 
 		protected override void ClearItems()
 		{
@@ -20,22 +20,24 @@ namespace MSHC.WPF.MVVM
 			}
 			else
 			{
-				while (Count > 0)
-					base.RemoveAt(Count - 1);
+				while (Count > 0) base.RemoveAt(Count - 1);
 			}
 		}
 
 		protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
 		{
-			if (e.Action != NotifyCollectionChangedAction.Reset)
-				base.OnCollectionChanged(e);
+			if (e.Action != NotifyCollectionChangedAction.Reset) base.OnCollectionChanged(e);
 		}
 
-		public ObservableCollectionNoReset(Boolean rangeActionsSupported = false)
+		public ObservableCollectionNoReset(bool rangeActionsSupported = false)
 		{
 			RangeActionsSupported = rangeActionsSupported;
 		}
 
-		// Additional constructors omitted.
+		public ObservableCollectionNoReset(IEnumerable<T> data)
+		{
+			RangeActionsSupported = false;
+			foreach (var d in data) Add(d);
+		}
 	}
 }

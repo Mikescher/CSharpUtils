@@ -5,16 +5,20 @@ namespace MSHC.Util.Helper
 {
 	public struct ProcessOutput
 	{
+		public readonly string Command;
 		public readonly int ExitCode;
 		public readonly string StdOut;
 		public readonly string StdErr;
 
-		public ProcessOutput(int ex, string stdout, string stderr)
+		public ProcessOutput(string cmd, int ex, string stdout, string stderr)
 		{
+			Command = cmd;
 			ExitCode = ex;
 			StdOut = stdout;
 			StdErr = stderr;
 		}
+
+		public override string ToString() => $"{Command}\n=> {ExitCode}\n\n[stdout]\n{StdOut}\n\n[stderr]\n{StdErr}";
 	}
 
 	public static class ProcessHelper
@@ -32,7 +36,7 @@ namespace MSHC.Util.Helper
 					RedirectStandardOutput = true,
 					RedirectStandardError = true,
 					CreateNoWindow = true,
-					ErrorDialog = false
+					ErrorDialog = false,
 				}
 			};
 
@@ -63,10 +67,10 @@ namespace MSHC.Util.Helper
 
 			process.BeginOutputReadLine();
 			process.BeginErrorReadLine();
-			
+
 			process.WaitForExit();
 
-			return new ProcessOutput(process.ExitCode, builderOut.ToString(), builderErr.ToString());
+			return new ProcessOutput($"{command} {arguments.Replace("\r", "\\r").Replace("\n", "\\n")}", process.ExitCode, builderOut.ToString(), builderErr.ToString());
 		}
 	}
 }
