@@ -1,12 +1,12 @@
-﻿using MSHC.WPF.MVVM;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Markup;
+using MSHC.WPF.MVVM;
 
-namespace MSHC.WPF.Extensions.MarkupExtensions
+namespace MSHC.WPF.MarkupExtensions
 {
 	public class EventBindingExtension : MarkupExtension
 	{

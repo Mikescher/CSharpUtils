@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Markup;
 
-namespace MSHC.WPF.Extensions.Services
+namespace MSHC.WPF.Services
 {
 	[ContentProperty("Template")]
 	public class ConditionalDataTemplate : DependencyObject

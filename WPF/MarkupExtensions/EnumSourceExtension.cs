@@ -3,8 +3,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using MSHC.Lang.Attributes;
 
-namespace MSHC.WPF.Extensions.MarkupExtensions
+namespace MSHC.WPF.MarkupExtensions
 {
 	/// <summary>
 	/// http://stackoverflow.com/q/20911104/1761622
@@ -40,18 +41,43 @@ namespace MSHC.WPF.Extensions.MarkupExtensions
 			var enumValues = Enum.GetValues(_enumType);
 			return enumValues
 				.Cast<object>()
+				.Where(GetVisible)
 				.Select(enumValue => new EnumMember{ Value = enumValue, Display = GetDescription(enumValue) })
 				.ToArray();
 		}
 
 		private string GetDescription(object enumValue)
 		{
-			var descriptionAttribute = _enumType
+			var descriptionAttribute1 = _enumType
 										.GetField(enumValue.ToString())
 										.GetCustomAttributes(typeof(DescriptionAttribute), false)
-										.FirstOrDefault() as DescriptionAttribute;
+										.OfType<DescriptionAttribute>()
+										.FirstOrDefault();
 
-			return (descriptionAttribute != null) ? descriptionAttribute.Description : enumValue.ToString();
+			if (descriptionAttribute1 != null) return descriptionAttribute1.Description;
+
+			var descriptionAttribute2 = _enumType
+										.GetField(enumValue.ToString())
+										.GetCustomAttributes(typeof(EnumDescriptorAttribute), false)
+										.OfType<EnumDescriptorAttribute>()
+										.FirstOrDefault();
+
+			if (descriptionAttribute2 != null) return descriptionAttribute2.Description;
+
+			return enumValue.ToString();
+		}
+
+		private bool GetVisible(object enumValue)
+		{
+			var descriptionAttribute2 = _enumType
+										.GetField(enumValue.ToString())
+										.GetCustomAttributes(typeof(EnumDescriptorAttribute), false)
+										.OfType<EnumDescriptorAttribute>()
+										.FirstOrDefault();
+
+			if (descriptionAttribute2 != null) return descriptionAttribute2.Visible;
+
+			return true;
 		}
 
 	}

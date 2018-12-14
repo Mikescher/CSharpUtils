@@ -1,8 +1,7 @@
-﻿using MSHC.Lang.Reflection;
-using System;
+﻿using System;
 using System.Reflection;
 
-namespace MSHC.WPF.Extensions.BindingProxies
+namespace MSHC.WPF.BindingProxies
 {
 	public sealed class IndirectProperty<TType>
 	{

@@ -4,15 +4,14 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using MSHC.Lang.Reflection;
 
-namespace MSHC.WPF.Extensions.BindingProxies
+namespace MSHC.WPF.BindingProxies
 {
 	public abstract class AbstractLegacyBinding<TType> : FrameworkElement, INotifyPropertyChanged
 	{
 		#region Properties
 
-		public static readonly DependencyProperty ElementProperty = DependencyProperty.Register("Element", typeof(object), typeof(AbstractLegacyBinding<TType>), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, (o, a) => ((AbstractLegacyBinding<TType>)o).ElementChanged(a)));
+		public static readonly DependencyProperty ElementProperty = DependencyProperty.Register("Element", typeof(object), typeof(AbstractLegacyBinding<TType>), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.None, (o, a) => ((AbstractLegacyBinding<TType>)o).ElementChanged()));
 		public object Element
 		{
 			get { return GetValue(ElementProperty); }
@@ -48,6 +47,9 @@ namespace MSHC.WPF.Extensions.BindingProxies
 		private IndirectProperty<TType> _indirectProperty = null;
 
 		private bool _suppressChangedEvent = false;
+
+		public event Action OnBeforePropertySet;
+		public event Action OnAfterPropertySet;
 
 		protected AbstractLegacyBinding()
 		{
@@ -114,10 +116,10 @@ namespace MSHC.WPF.Extensions.BindingProxies
 
 		protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
-			if (PropertyChanged != null) PropertyChanged.Invoke(this, new PropertyChangedEventArgs(propertyName));
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
-		private void ElementChanged(DependencyPropertyChangedEventArgs args)
+		private void ElementChanged()
 		{
 			Init();
 		}
@@ -132,7 +134,9 @@ namespace MSHC.WPF.Extensions.BindingProxies
 			{
 				if (!EqualityComparer<TType>.Default.Equals(v, _indirectProperty.Get()))
 				{
+					OnBeforePropertySet?.Invoke();
 					_indirectProperty.Set((TType)args.NewValue);
+					OnAfterPropertySet?.Invoke();
 				}
 			}
 		}

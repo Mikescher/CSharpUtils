@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows;
 
-namespace MSHC.WPF.Extensions.BindingProxies
+namespace MSHC.WPF.BindingProxies
 {
 	public abstract class AbstractRawBinding<TType> : FrameworkElement, INotifyPropertyChanged
 	{
@@ -21,7 +21,7 @@ namespace MSHC.WPF.Extensions.BindingProxies
 		}
 
 		private IndirectProperty<TType> _targetBinding = null;
-		public static readonly DependencyProperty TargetBindingProperty = DependencyProperty.Register("TargetBinding", typeof(IndirectProperty<TType>), typeof(AbstractRawBinding<TType>), new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, (o, a) => ((AbstractRawBinding<TType>)o).TargetBindingChanged(a)));
+		public static readonly DependencyProperty TargetBindingProperty = DependencyProperty.Register("TargetBinding", typeof(IndirectProperty<TType>), typeof(AbstractRawBinding<TType>), new FrameworkPropertyMetadata(null, (o, a) => ((AbstractRawBinding<TType>)o).TargetBindingChanged(a)));
 		public IndirectProperty<TType> TargetBinding
 		{
 			get { return (IndirectProperty<TType>)GetValue(TargetBindingProperty); }

@@ -1,4 +1,4 @@
-﻿namespace MSHC.WPF.Extensions.BindingProxies
+﻿namespace MSHC.WPF.BindingProxies
 {
 	public class RawIntegerBinding : AbstractRawBinding<int> { }
 

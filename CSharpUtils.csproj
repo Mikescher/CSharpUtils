@@ -45,6 +45,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Lang\Attributes\EnumDescriptorAttribute.cs" />
     <Compile Include="Lang\Collections\LimitedDictionary.cs" />
     <Compile Include="Lang\Collections\ObservableCollectionWithClearEvents.cs" />
     <Compile Include="Lang\Special\StackingBool.cs" />
@@ -64,6 +65,13 @@
     </Compile>
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="Util\Helper\FileSystemUtil.cs" />
+    <Compile Include="WPF\BindingProxies\AbstractLegacyBinding.cs" />
+    <Compile Include="WPF\BindingProxies\AbstractRawBinding.cs" />
+    <Compile Include="WPF\BindingProxies\EventProxy.cs" />
+    <Compile Include="WPF\BindingProxies\IndirectProperty.cs" />
+    <Compile Include="WPF\BindingProxies\LegacyBindings.cs" />
+    <Compile Include="WPF\BindingProxies\RawBindings.cs" />
+    <Compile Include="WPF\BindingProxies\ReflectionPathResolver.cs" />
     <Compile Include="WPF\Controls\ClickSelectTextBox.cs" />
     <Compile Include="WPF\CollectionViewExtension.cs" />
     <Compile Include="Lang\Collections\CollectionExtension.cs" />
@@ -83,22 +91,13 @@
     <Compile Include="WPF\Controls\FontBox.xaml.cs">
       <DependentUpon>FontBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="WPF\Extensions\BindingProxies\AbstractLegacyBinding.cs" />
-    <Compile Include="WPF\Extensions\BindingProxies\LegacyBindings.cs" />
-    <Compile Include="WPF\Extensions\MarkupExtensions\EnumSourceExtension.cs" />
     <Compile Include="Lang\Reflection\EventProxy.cs" />
-    <Compile Include="WPF\Extensions\BindingProxies\IndirectProperty.cs" />
-    <Compile Include="WPF\Extensions\BindingProxies\AbstractRawBinding.cs" />
-    <Compile Include="WPF\Extensions\MarkupExtensions\EventBindingExtension.cs" />
-    <Compile Include="WPF\Extensions\Services\ConditionalDataTemplate.cs" />
-    <Compile Include="WPF\Extensions\Services\MultiDatatemplateService.cs" />
-    <Compile Include="WPF\Extensions\Services\WatermarkAdorner.cs" />
-    <Compile Include="WPF\Extensions\Services\WatermarkService.cs" />
+    <Compile Include="WPF\MarkupExtensions\EnumSourceExtension.cs" />
+    <Compile Include="WPF\MarkupExtensions\EventBindingExtension.cs" />
     <Compile Include="WPF\MVVM\NaturalSortComparer.cs" />
     <Compile Include="WPF\MVVM\ObservableCollectionNoReset.cs" />
     <Compile Include="WPF\MVVM\ObservableObject.cs" />
     <Compile Include="WPF\MVVM\OneWayConverter.cs" />
-    <Compile Include="WPF\Extensions\BindingProxies\RawBindings.cs" />
     <Compile Include="WPF\MVVM\ProjectionComparer.cs" />
     <Compile Include="WPF\MVVM\TwoWayConverter.cs" />
     <Compile Include="WPF\MVVM\TypedRelayCommand.cs" />
@@ -128,6 +127,12 @@
     <Compile Include="WPF\Controls\SimpleToolbarSeparator.xaml.cs">
       <DependentUpon>SimpleToolbarSeparator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WPF\Services\ConditionalControlTemplate.cs" />
+    <Compile Include="WPF\Services\ConditionalDataTemplate.cs" />
+    <Compile Include="WPF\Services\MultiControlTemplateService.cs" />
+    <Compile Include="WPF\Services\MultiDatatemplateService.cs" />
+    <Compile Include="WPF\Services\WatermarkAdorner.cs" />
+    <Compile Include="WPF\Services\WatermarkService.cs" />
     <Compile Include="WPF\WPFHelper.cs" />
   </ItemGroup>
   <ItemGroup>
