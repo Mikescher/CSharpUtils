@@ -1,8 +1,8 @@
 ﻿using MSHC.WPF.MVVM;
 
-namespace MSHC.WPF.Converter.Numbers
+namespace MSHC.WPF.Converter
 {
-	class Subtract : OneWayConverter<double, double>
+	public class Subtract : OneWayConverter<double, double>
 	{
 		protected override double Convert(double value, object parameter)
 		{

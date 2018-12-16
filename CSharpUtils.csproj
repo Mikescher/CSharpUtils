@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="Util\Helper\FileSystemUtil.cs" />
+    <Compile Include="Util\Helper\RegexHelper.cs" />
     <Compile Include="WPF\BindingProxies\AbstractLegacyBinding.cs" />
     <Compile Include="WPF\BindingProxies\AbstractRawBinding.cs" />
     <Compile Include="WPF\BindingProxies\EventProxy.cs" />
@@ -77,11 +78,19 @@
     <Compile Include="WPF\CollectionViewExtension.cs" />
     <Compile Include="Lang\Collections\CollectionExtension.cs" />
     <Compile Include="Lang\Exceptions\XMLStructureException.cs" />
+    <Compile Include="WPF\Converter\DateTime\DateTimeToISODateStr.cs" />
+    <Compile Include="WPF\Converter\Number\BooleanToConditionalInteger.cs" />
     <Compile Include="WPF\Converter\Boolean\IsNotNull.cs" />
     <Compile Include="WPF\Converter\Boolean\IsNull.cs" />
     <Compile Include="WPF\Converter\Boolean\MultiBoolOperator.cs" />
     <Compile Include="WPF\Converter\Boolean\NegateBool.cs" />
+    <Compile Include="WPF\Converter\Number\GreaterZero.cs" />
+    <Compile Include="WPF\Converter\Number\IsWhiteSpaceToConditionalInteger.cs" />
     <Compile Include="WPF\Converter\Number\Subtract.cs" />
+    <Compile Include="WPF\Converter\Other\BoolToBrushSwitch.cs" />
+    <Compile Include="WPF\Converter\Other\ByteToFilesize.cs" />
+    <Compile Include="WPF\Converter\Other\MultiBindingSelect.cs" />
+    <Compile Include="WPF\Converter\String\StringNullCoalesce.cs" />
     <Compile Include="WPF\Converter\String\TextToLines.cs" />
     <Compile Include="WPF\Converter\DateTime\TodayDateTimeToDisplay.cs" />
     <Compile Include="WPF\Converter\Other\BoolToColor.cs" />
@@ -103,6 +112,7 @@
     <Compile Include="WPF\Converter\String\StringCoalesce.cs" />
     <Compile Include="WPF\Converter\String\StringIsNotWhitespace.cs" />
     <Compile Include="WPF\Converter\String\SubstringLeft.cs" />
+    <Compile Include="WPF\Converter\Visibility\NonZeroToVisibility.cs" />
     <Compile Include="WPF\DependencyObjectExtension.cs" />
     <Compile Include="Serialization\XElementExtensions.cs" />
     <Compile Include="Util\Helper\AvgDurationWatch.cs" />
