@@ -68,6 +68,9 @@ namespace MSHC.Util.Helper
 
 						parameter = null;
 						break;
+
+					default:
+						break;
 				}
 			}
 			if (parameter != null)
