@@ -215,6 +215,7 @@ namespace MSHC.Network
 							maxindent = System.Math.Max(indent, maxindent);
 						}
 						break;
+
 					case '}':
 					case ']':
 						if (!quoted)
@@ -223,6 +224,7 @@ namespace MSHC.Network
 							if (indent <= 0) return maxindent;
 						}
 						break;
+
 					case '"':
 						bool escaped = false;
 						var index = i;
@@ -230,6 +232,9 @@ namespace MSHC.Network
 							escaped = !escaped;
 						if (!escaped)
 							quoted = !quoted;
+						break;
+
+					default:
 						break;
 				}
 			}
