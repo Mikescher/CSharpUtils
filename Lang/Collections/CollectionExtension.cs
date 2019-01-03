@@ -304,6 +304,24 @@ namespace MSHC.Lang.Collections
 
 			return true;
 		}
+		
+		public static bool UnorderedCollectionEquals<T>(this IEnumerable<T> etarget, IEnumerable<T> esource)
+		{
+			var source = esource.ToList();
+			var target = etarget.ToList();
+
+			if (source.Count != target.Count) return false;
+
+			source = source.OrderBy(p=>p, Comparer<T>.Default).ToList();
+			target = target.OrderBy(p=>p, Comparer<T>.Default).ToList();
+
+			for (int i = 0; i < source.Count; i++)
+			{
+				if (!EqualityComparer<T>.Default.Equals(source[i], target[i])) return false;
+			}
+
+			return true;
+		}
 
 		/// <summary>
 		/// https://stackoverflow.com/a/2837527/1761622

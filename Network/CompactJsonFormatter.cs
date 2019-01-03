@@ -4,14 +4,14 @@ namespace MSHC.Network
 {
 	public static class CompactJsonFormatter
 	{
-		private const string INDENT_STRING = "  ";
-
-		public static string FormatJSON(string str, int maxIndent)
+		public static string FormatJSON(string str, int maxIndent, int baseIndent=0, string indentStr="  ")
 		{
 			var indent = 0;
 			var quoted = false;
 			var sb = new StringBuilder();
 			var last = ' ';
+
+			for (int ix = 0; ix < (indent+baseIndent); ix++) sb.Append(indentStr);
 			for (var i = 0; i < str.Length; i++)
 			{
 				var ch = str[i];
@@ -39,7 +39,7 @@ namespace MSHC.Network
 							}
 							if (empty) { i += ffwd; sb.Append(str[i]); indent--; last = str[i]; break; }
 							sb.AppendLine();
-							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							for (int ix = 0; ix < (indent+baseIndent); ix++) sb.Append(indentStr);
 							last = ' ';
 						}
 						break;
@@ -50,7 +50,7 @@ namespace MSHC.Network
 							indent--;
 							if (indent + 1 >= maxIndent) { sb.Append(ch); break; }
 							sb.AppendLine();
-							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							for (int ix = 0; ix < (indent+baseIndent); ix++) sb.Append(indentStr);
 						}
 						sb.Append(ch);
 						last = ch;
@@ -72,7 +72,7 @@ namespace MSHC.Network
 						{
 							if (indent >= maxIndent) { sb.Append(' '); last = ' '; break; }
 							sb.AppendLine();
-							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							for (int ix = 0; ix < (indent+baseIndent); ix++) sb.Append(indentStr);
 							last = ' ';
 						}
 						break;
@@ -103,7 +103,7 @@ namespace MSHC.Network
 			return sb.ToString();
 		}
 
-		public static string CompressJson(string str, int compressionLevel)
+		public static string CompressJson(string str, int compressionLevel, string indentStr= "  ")
 		{
 			var indent = 0;
 			var quoted = false;
@@ -133,7 +133,7 @@ namespace MSHC.Network
 							indent++;
 							if (compress > 0) break;
 							sb.AppendLine();
-							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							for (int ix = 0; ix < indent; ix++) sb.Append(indentStr);
 							last = ' ';
 						}
 						break;
@@ -145,7 +145,7 @@ namespace MSHC.Network
 							if (compress > 0) { compress--; sb.Append(ch); break; }
 							compress--;
 							sb.AppendLine();
-							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							for (int ix = 0; ix < indent; ix++) sb.Append(indentStr);
 						}
 						sb.Append(ch);
 						last = ch;
@@ -167,7 +167,7 @@ namespace MSHC.Network
 						{
 							if (compress > 0) { sb.Append(' '); last = ' '; break; }
 							sb.AppendLine();
-							for (int ix = 0; ix < indent; ix++) sb.Append(INDENT_STRING);
+							for (int ix = 0; ix < indent; ix++) sb.Append(indentStr);
 						}
 						break;
 					case ':':
