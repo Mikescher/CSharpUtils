@@ -2,8 +2,9 @@
 
 namespace MSHC.WPF.Converter
 {
-	public class NegateBool : OneWayConverter<bool, bool>
+	public class NegateBool : TwoWayConverter<bool, bool>
 	{
 		protected override bool Convert(bool value, object parameter) => !value;
+		protected override bool ConvertBack(bool value, object parameter) => !value;
 	}
 }

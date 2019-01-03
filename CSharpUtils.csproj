@@ -90,6 +90,7 @@
     <Compile Include="WPF\Converter\Other\BoolToBrushSwitch.cs" />
     <Compile Include="WPF\Converter\Other\ByteToFilesize.cs" />
     <Compile Include="WPF\Converter\Other\MultiBindingSelect.cs" />
+    <Compile Include="WPF\Converter\String\TwoWayStringNullCoalesce.cs" />
     <Compile Include="WPF\Converter\String\StringNullCoalesce.cs" />
     <Compile Include="WPF\Converter\String\TextToLines.cs" />
     <Compile Include="WPF\Converter\DateTime\TodayDateTimeToDisplay.cs" />
