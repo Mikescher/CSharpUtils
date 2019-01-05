@@ -114,6 +114,7 @@
     <Compile Include="WPF\Converter\String\StringIsNotWhitespace.cs" />
     <Compile Include="WPF\Converter\String\SubstringLeft.cs" />
     <Compile Include="WPF\Converter\Visibility\NonZeroToVisibility.cs" />
+    <Compile Include="WPF\DataGridHelper.cs" />
     <Compile Include="WPF\DependencyObjectExtension.cs" />
     <Compile Include="Serialization\XElementExtensions.cs" />
     <Compile Include="Util\Helper\AvgDurationWatch.cs" />
