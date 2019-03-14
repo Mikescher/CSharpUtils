@@ -67,6 +67,7 @@
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="Util\Helper\FileSystemUtil.cs" />
     <Compile Include="Util\Helper\RegexHelper.cs" />
+    <Compile Include="Util\Helper\StringHelper.cs" />
     <Compile Include="WPF\BindingProxies\AbstractLegacyBinding.cs" />
     <Compile Include="WPF\BindingProxies\AbstractRawBinding.cs" />
     <Compile Include="WPF\BindingProxies\EventProxy.cs" />
