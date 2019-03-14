@@ -177,13 +177,16 @@ namespace MSHC.Serialization
 		}
 
 		/// <summary>
-		/// Reserved Chars:  * . @ ~ & = 
+		/// Reserved Chars:  * . @ ~ & = ?
 		/// 
 		/// XML-Tag by name (case-insensitive):
 		///     "asdf"
 		/// 
+		/// Optional XML-Tag by name (case-insensitive):
+		///     "?asdf"
+		/// 
 		/// None,One,Many tags by name (case-insensitive):
-		///     "*asdf*"
+		///     "*asdf"
 		/// 
 		/// Tag with attribute+value
 		///     "asdf@attr=value"
@@ -204,10 +207,16 @@ namespace MSHC.Serialization
 			var nn = p.Skip(1).ToArray();
 
 			var searchMulti = false;
-			if (search.Length > 2 && search.StartsWith("*") && search.EndsWith("*"))
+			var searchOptional = false;
+
+			if (search.Length > 1 && search.StartsWith("*"))
 			{
-				search = search.Substring(1, search.Length - 2);
+				search = search.Substring(1);
 				searchMulti = true;
+			} else if (search.Length > 1 && search.StartsWith("?"))
+			{
+				search = search.Substring(1);
+				searchOptional = true;
 			}
 
 			List<Tuple<string, string>> attrFilter = new List<Tuple<string, string>>();
@@ -223,19 +232,22 @@ namespace MSHC.Serialization
 				}
 			}
 			
-			var xf = x.Elements().Where(e => e.Name.LocalName.ToLower() == search.ToLower());
+			var exf = x.Elements().Where(e => e.Name.LocalName.ToLower() == search.ToLower());
 
 			foreach (var filter in attrFilter)
 			{
-				xf = xf.Where(xx => xx.Attributes().Any(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()));
-				if (filter.Item2 != "~") xf = xf.Where(xx => xx.Attributes().Where(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()).Any(attr => attr.Value == filter.Item2));
+				exf = exf.Where(xx => xx.Attributes().Any(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()));
+				if (filter.Item2 != "~") exf = exf.Where(xx => xx.Attributes().Where(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()).Any(attr => attr.Value == filter.Item2));
 			}
+
+			var xf = exf.ToList();
 
 			if (nn.Length == 0)
 			{
 				foreach (var f in xf) yield return f;
 			}
-
+			
+			if (searchOptional)                      foreach (var rf in XElemList(x, nn)) yield return rf; // * = 0
 			if (searchMulti)                         foreach (var rf in XElemList(x, nn)) yield return rf; // * = 0
 			if (nn.Length > 0) foreach (var f in xf) foreach (var rf in XElemList(f, nn)) yield return rf; // * = 1
 			if (searchMulti)   foreach (var f in xf) foreach (var rf in XElemList(f, p))  yield return rf; // * = n
