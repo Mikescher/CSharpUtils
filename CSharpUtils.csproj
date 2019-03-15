@@ -64,6 +64,7 @@
     <Compile Include="Network\GZWebClient.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Serialization\Tommy.cs" />
     <Compile Include="Util\Helper\FilenameHelper.cs" />
     <Compile Include="Util\Helper\FileSystemUtil.cs" />
     <Compile Include="Util\Helper\RegexHelper.cs" />

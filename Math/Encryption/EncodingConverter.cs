@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MSHC.Math.Encryption
 {
@@ -102,6 +104,20 @@ namespace MSHC.Math.Encryption
 		public static int GetHexValLowercase(char hex)
 		{
 			return hex - (hex < 58 ? 48 : 87);
+		}
+
+		public static string ByteArrayToHexDump(IList<byte> b, string bytesep = "", int linelen = -1, string nullValue = null, bool upper = false)
+		{
+			if (b == null) return nullValue;
+
+			string ToHex(byte p) => (upper ? (Convert.ToString(p, 16).PadLeft(2, '0').ToUpper()) : (Convert.ToString(p, 16).PadLeft(2, '0')));
+
+			if (linelen <= 0) return string.Join(bytesep, b.Select(ToHex));
+
+			return string.Join(Environment.NewLine, Enumerable
+				.Range(0, (int)System.Math.Ceiling(b.Count/(linelen*1d)))
+				.Select(i1 => Enumerable.Range(i1*linelen, System.Math.Min(b.Count, i1*linelen+linelen)-i1*linelen))
+				.Select(rr => string.Join(bytesep, rr.Select(idx => ToHex(b[idx])))));
 		}
 	}
 }
