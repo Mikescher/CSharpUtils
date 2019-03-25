@@ -4,7 +4,7 @@ using MSHC.WPF.MVVM;
 
 namespace MSHC.WPF.Converter
 {
-	public class IntegerEqualsToVisibility : OneWayConverter<int, Visibility>
+	public class IntegerLesserToVisibility : OneWayConverter<int, Visibility>
 	{
 		protected override Visibility Convert(int value, object parameter)
 		{
@@ -12,7 +12,7 @@ namespace MSHC.WPF.Converter
 			var p1 = (Visibility)Enum.Parse(typeof(Visibility), parameter.ToString().Split(';')[1]);
 			var p2 = (Visibility)Enum.Parse(typeof(Visibility), parameter.ToString().Split(';')[2]);
 
-			return (value == v) ? p1 : p2;
+			return (value < v) ? p1 : p2;
 
 		}
 	}
