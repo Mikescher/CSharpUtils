@@ -98,6 +98,7 @@
     <Compile Include="WPF\Converter\DateTime\TodayDateTimeToDisplay.cs" />
     <Compile Include="WPF\Converter\Other\BoolToColor.cs" />
     <Compile Include="WPF\Converter\Other\BoolToFontWeight.cs" />
+    <Compile Include="WPF\Converter\Visibility\IntegerEqualsToVisibility.cs" />
     <Compile Include="WPF\Converter\Visibility\BoolToVisibility.cs" />
     <Compile Include="WPF\Converter\DateTime\DateOnlyToDisplay.cs" />
     <Compile Include="WPF\Converter\DateTime\DateTimeToDisplay.cs" />
