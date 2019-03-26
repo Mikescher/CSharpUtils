@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace MSHC.WPF.Services
 {
@@ -72,7 +73,7 @@ namespace MSHC.WPF.Services
 			{
 				control.GotKeyboardFocus += Control_GotKeyboardFocus;
 				control.LostKeyboardFocus += Control_Loaded;
-				((TextBox)control).TextChanged += Control_GotKeyboardFocus;
+				((TextBox)control).TextChanged += Control_TextChanged;
 			}
 
 			if (d is ItemsControl i && !(i is ComboBox))
@@ -84,6 +85,21 @@ namespace MSHC.WPF.Services
 				// for ItemsSource property  
 				DependencyPropertyDescriptor prop = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, i.GetType());
 				prop.AddValueChanged(i, ItemsSourceChanged);
+			}
+		}
+
+		private static void Control_TextChanged(object sender, TextChangedEventArgs e)
+		{
+			if (sender is TextBox tb)
+			{
+				if (!(tb.IsKeyboardFocused || tb.IsKeyboardFocusWithin) && ShouldShowWatermark(tb))
+				{
+					ShowWatermark(tb);
+				}
+				else
+				{
+					RemoveWatermark(tb);
+				}
 			}
 		}
 
