@@ -5,91 +5,97 @@ namespace MSHC.Util.Threads
 {
 	public class DelayedCombiningInvoker
 	{
-		private readonly object syncLock = new object();
+		private readonly object _syncLock = new object();
 
-		private readonly Action action;
-		private readonly int delay;
-		private readonly int maxDelay;
+		private readonly Action _action;
+		private readonly int _delay;
+		private readonly int _maxDelay;
+		private readonly bool _highspeed;
 
-		private Thread executor;
-		private long lastRequestTime = -1;
-		private long initialRequestTime = -1;
-		private bool cancelled = false;
+		private Thread _executor;
+		private long _lastRequestTime = -1;
+		private long _initialRequestTime = -1;
+		private bool _cancelled = false;
 
-		private DelayedCombiningInvoker(Action a, int d, int md)
+		private DelayedCombiningInvoker(Action a, int d, int md, bool hs)
 		{
-			action = a;
-			delay = d;
-			maxDelay = md;
+			_action = a;
+			_delay = d;
+			_maxDelay = md;
+			_highspeed = hs;
 		}
 
 		public static DelayedCombiningInvoker Create(Action a, int delay, int maxDelay)
 		{
-			return new DelayedCombiningInvoker(a, delay, maxDelay);
+			return new DelayedCombiningInvoker(a, delay, maxDelay, false);
+		}
+
+		public static DelayedCombiningInvoker CreateHighspeed(Action a, int delay, int maxDelay)
+		{
+			return new DelayedCombiningInvoker(a, delay, maxDelay, true);
 		}
 
 		private void Start()
 		{
-			if (executor == null || !executor.IsAlive)
+			if (_executor == null || !_executor.IsAlive)
 			{
-				executor = new Thread(Run);
-				executor.IsBackground = true;
-				executor.Start();
+				_executor = new Thread(Run) { IsBackground = true };
+				_executor.Start();
 			}
 		}
 
 		public void Request()
 		{
-			lock (syncLock)
+			lock (_syncLock)
 			{
-				lastRequestTime = Environment.TickCount;
-				if (executor == null || !executor.IsAlive) Start();
+				_lastRequestTime = Environment.TickCount;
+				if (_executor == null || !_executor.IsAlive) Start();
 			}
 		}
 
 		private void Run()
 		{
-			lock (syncLock)
+			lock (_syncLock)
 			{
-				initialRequestTime = Environment.TickCount;
+				_initialRequestTime = Environment.TickCount;
 			}
 
 			for (; ; )
 			{
-				if (cancelled) return;
+				if (_cancelled) return;
 
-				lock (syncLock)
+				lock (_syncLock)
 				{
-					long durationLast = Environment.TickCount - lastRequestTime;
-					long durationTotal = Environment.TickCount - initialRequestTime;
+					long durationLast = Environment.TickCount - _lastRequestTime;
+					long durationTotal = Environment.TickCount - _initialRequestTime;
 
-					if (durationLast > delay || durationTotal > maxDelay)
+					if (durationLast > _delay || durationTotal > _maxDelay)
 					{
-						action();
+						_action();
 						return;
 					}
 				}
 
-				Thread.Sleep(1 + delay / 100);
+				Thread.Sleep((_highspeed) ? (0) : (1 + _delay / 100));
 			}
 		}
 
 		public void CancelPendingRequests()
 		{
-			if (executor != null && executor.IsAlive)
+			if (_executor != null && _executor.IsAlive)
 			{
-				cancelled = true;
-				while (executor.IsAlive)
+				_cancelled = true;
+				while (_executor.IsAlive)
 				{
-					Thread.Sleep(delay / 200);
+					Thread.Sleep((_highspeed) ? (0) : (_delay / 200));
 				}
-				cancelled = false;
+				_cancelled = false;
 			}
 		}
 
 		public bool HasPendingRequests()
 		{
-			return (executor != null && executor.IsAlive);
+			return (_executor != null && _executor.IsAlive);
 		}
 	}
 }
