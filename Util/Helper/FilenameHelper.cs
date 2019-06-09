@@ -128,5 +128,13 @@ namespace MSHC.Util.Helper
 				return ALLOWED_CHARACTER.Contains(chr);
 			}
 		}
+
+		public static bool IsReservedFilename(string fileName)
+		{
+			if (RESERVED_FILENAMES.Any(r => string.Equals(r, fileName, StringComparison.CurrentCultureIgnoreCase))) return true;
+			if (RESERVED_FILENAMES.Any(r => fileName.ToLower().StartsWith(r.ToLower() + "."))) return true;
+			return false;
+
+		}
 	}
 }
