@@ -1305,8 +1305,6 @@ namespace MSHC.Serialization // https://github.com/dezhidki/Tommy
 
 				first = false;
 
-				//TODO: Reuse ProcessQuotedValueCharacter
-
 				// Skip the current character if it is going to be escaped later
 				if (escaped)
 				{
