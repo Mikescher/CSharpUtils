@@ -177,7 +177,7 @@ namespace MSHC.Serialization
 		}
 
 		/// <summary>
-		/// Reserved Chars:  * . @ ~ & = ?
+		/// Reserved Chars:  * . @ ~ & = ? #
 		/// 
 		/// XML-Tag by name (case-insensitive):
 		///     "asdf"
@@ -200,24 +200,59 @@ namespace MSHC.Serialization
 		/// Query for attribute value (only in XList)
 		///     ".attr"
 		/// 
+		/// Any XML-Tag regardless of name:
+		///     "*"
+		/// 
+		/// Zero or one XML-Tag regardless of name:
+		///     "*?"
+		/// 
+		/// Only first matching tag:
+		///     "asdf#first"
+		///     "asdf@attr=value#first"
+		/// 
+		/// Match tag name case-sensitive:
+		///     "asdf#exact"
+		/// 
 		/// </summary>
 		public static IEnumerable<XElement> XElemList(this XContainer x, params string[] p)
 		{
+			const int SM_NORMAL   = 0;
+			const int SM_MULTI    = 1;
+			const int SM_OPTIONAL = 2;
+
 			var search = p[0];
 			var nn = p.Skip(1).ToArray();
 
-			var searchMulti = false;
-			var searchOptional = false;
+			int searchMode = SM_NORMAL;
+			bool wildcard = false; // match all tags
 
-			if (search.Length > 1 && search.StartsWith("*"))
+			bool optFirstOnly = false;
+			bool optMatchCase = false;
+
+			if (search == "*?" || search.StartsWith("*?@"))
 			{
-				search = search.Substring(1);
-				searchMulti = true;
-			} else if (search.Length > 1 && search.StartsWith("?"))
-			{
-				search = search.Substring(1);
-				searchOptional = true;
+				search = "";
+				searchMode = SM_OPTIONAL;
+				wildcard = true;
 			}
+			else if (search == "*" || search.StartsWith("*@"))
+			{
+				search = "";
+				searchMode = SM_NORMAL;
+				wildcard = true;
+			}
+			else if (search.Length > 1 && search.StartsWith("*"))
+			{
+				search = search.Substring(1);
+				searchMode = SM_MULTI;
+			}
+			else if (search.Length > 1 && search.StartsWith("?"))
+			{
+				search = search.Substring(1);
+				searchMode = SM_OPTIONAL;
+			}
+
+			var options = "";
 
 			List<Tuple<string, string>> attrFilter = new List<Tuple<string, string>>();
 			if (search.Contains('@'))
@@ -226,31 +261,89 @@ namespace MSHC.Serialization
 
 				search = split[0];
 
-				foreach (var filter in split[1].Split('&'))
+				var attrSearch = split[1];
+				if (attrSearch.Contains('#'))
+				{
+					var split2 = attrSearch.Split('#');
+					attrSearch = split2[0];
+					options = split2[1];
+				}
+
+				foreach (var filter in attrSearch.Split('&'))
 				{
 					attrFilter.Add(Tuple.Create(filter.Split('=')[0], filter.Split('=')[1]));
 				}
 			}
+			else if (search.Contains('#'))
+			{
+				var split = search.Split('#');
+				search = split[0];
+				options = split[1];
+			}
 			
-			var exf = x.Elements().Where(e => e.Name.LocalName.ToLower() == search.ToLower());
+			// parse options
+			if (options != "")
+			{
+				var optlist = options.Split('&');
+				foreach (var opt in optlist)
+				{
+					if (opt.ToLower() == "first") optFirstOnly = true;
+					else if (opt.ToLower() == "exact") optMatchCase = true;
+					else throw new Exception("Unknown Option: " + opt);
+				}
+			}
 
+			// get matching children (by tagname)
+			var matched_children = x.Elements().Where(e => wildcard || e.Name.LocalName.ToLower() == search.ToLower());
+
+			if (optMatchCase) matched_children = matched_children.Where(e => wildcard || e.Name.LocalName == search);
+
+			// filter matches some more (by tags etc)
 			foreach (var filter in attrFilter)
 			{
-				exf = exf.Where(xx => xx.Attributes().Any(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()));
-				if (filter.Item2 != "~") exf = exf.Where(xx => xx.Attributes().Where(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()).Any(attr => attr.Value == filter.Item2));
-			}
-
-			var xf = exf.ToList();
-
-			if (nn.Length == 0)
-			{
-				foreach (var f in xf) yield return f;
+				matched_children = matched_children.Where(xx => xx.Attributes().Any(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()));
+				if (filter.Item2 != "~") matched_children = matched_children.Where(xx => xx.Attributes().Where(e => e.Name.LocalName.ToLower() == filter.Item1.ToLower()).Any(attr => attr.Value == filter.Item2));
 			}
 			
-			if (searchOptional)                      foreach (var rf in XElemList(x, nn)) yield return rf; // * = 0
-			if (searchMulti)                         foreach (var rf in XElemList(x, nn)) yield return rf; // * = 0
-			if (nn.Length > 0) foreach (var f in xf) foreach (var rf in XElemList(f, nn)) yield return rf; // * = 1
-			if (searchMulti)   foreach (var f in xf) foreach (var rf in XElemList(f, p))  yield return rf; // * = n
+			if (optFirstOnly) matched_children = matched_children.Take(1);
+
+			var matches = matched_children.ToList();
+
+			if (nn.Length == 0) // end of recursion, return data
+			{
+				foreach (var f in matches) yield return f;
+				yield break;
+			}
+			
+			if (searchMode == SM_NORMAL)
+			{
+				// continue recursion normally
+				foreach (var f in matches) foreach (var rf in XElemList(f, nn)) yield return rf;
+			}
+			else if (searchMode == SM_OPTIONAL)
+			{
+				// continue recursion with this elem skipped
+				// (interprete ? as zero-times)
+				foreach (var rf in XElemList(x, nn)) yield return rf;
+
+				// continue recursion normally
+				// (interprete ? as one-time)
+				foreach (var f in matches) foreach (var rf in XElemList(f, nn)) yield return rf;
+			}
+			else if (searchMode == SM_MULTI)
+			{
+				// continue recursion with this elem skipped
+				// (interprete * as zero-times)
+				foreach (var rf in XElemList(x, nn)) yield return rf;
+
+				// continue recursion normally
+				// (interprete * as one-time)
+				foreach (var f in matches) foreach (var rf in XElemList(f, nn)) yield return rf;
+
+				// continue recursion with same same again (so the current tag can repeat)
+				// (interprete * as more-than-one-time)
+				foreach (var f in matches) foreach (var rf in XElemList(f, p)) yield return rf;
+			}
 		}
 
 		#endregion
