@@ -64,6 +64,20 @@ namespace MSHC.Lang.Collections
 		public static void SynchronizeGenericCollection(this IList target, IEnumerable esource)
 		{
 			var source = esource.OfType<object>().ToList();
+			
+			// first delete now-missing elements (reduces shuffle around when deleting single elemnt at start of list)
+			for (int i = 0; i < target.Count;)
+			{
+				if (!source.Any(ps => (ps == target[i]) ))
+				{
+					target.RemoveAt(i);
+					// not i++
+				}
+				else
+				{
+					i++;
+				}
+			}
 
 			for (int i = 0; i < System.Math.Max(target.Count, source.Count);)
 			{
@@ -97,6 +111,20 @@ namespace MSHC.Lang.Collections
 		public static void SynchronizeCollection<T>(this IList<T> target, IEnumerable<T> esource)
 		{
 			var source = esource.ToList();
+
+			// first delete now-missing elements (reduces shuffle around when deleting single elemnt at start of list)
+			for (int i = 0; i < target.Count;)
+			{
+				if (!source.Any(ps => EqualityComparer<T>.Default.Equals(ps, target[i])))
+				{
+					target.RemoveAt(i);
+					// not i++
+				}
+				else
+				{
+					i++;
+				}
+			}
 
 			for (int i = 0; i < System.Math.Max(target.Count, source.Count);)
 			{
