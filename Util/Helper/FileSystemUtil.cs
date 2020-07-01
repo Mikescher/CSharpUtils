@@ -118,7 +118,7 @@ namespace MSHC.Util.Helper
 					Directory.Delete(path);
 					return;
 				}
-				catch (IOException e)
+				catch (IOException)
 				{
 					Thread.Sleep(5);
 				}
