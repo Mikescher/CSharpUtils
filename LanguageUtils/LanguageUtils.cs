@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MSHC
 {
-	public static class CSharpUtils
+	public static class LanguageUtils
 	{
 		private static Version _versionCache = null; 
 		public static Version VERSION => _versionCache ?? (_versionCache=GetInformationalVersion());
@@ -14,10 +14,10 @@ namespace MSHC
 			try
 			{
 				var assembly = Assembly.GetExecutingAssembly();
-				if (assembly==null || !assembly.FullName.StartsWith("CSharpUtils")) assembly = Assembly.GetCallingAssembly();
-				if (assembly==null || !assembly.FullName.StartsWith("CSharpUtils")) assembly = Assembly.GetEntryAssembly();
-				if (assembly==null || !assembly.FullName.StartsWith("CSharpUtils")) assembly = Assembly.GetAssembly(typeof(CSharpUtils));
-				if (assembly==null || !assembly.FullName.StartsWith("CSharpUtils")) throw new Exception("Assembly not found");
+				if (assembly==null || !assembly.FullName.StartsWith("LanguageUtils")) assembly = Assembly.GetCallingAssembly();
+				if (assembly==null || !assembly.FullName.StartsWith("LanguageUtils")) assembly = Assembly.GetEntryAssembly();
+				if (assembly==null || !assembly.FullName.StartsWith("LanguageUtils")) assembly = Assembly.GetAssembly(typeof(LanguageUtils));
+				if (assembly==null || !assembly.FullName.StartsWith("LanguageUtils")) throw new Exception("Assembly not found");
 
 				var loc = assembly.Location;
 				var vi = FileVersionInfo.GetVersionInfo(loc);

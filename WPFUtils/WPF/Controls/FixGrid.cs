@@ -57,13 +57,13 @@ namespace MSHC.WPF.Controls
                 if (token.StartsWith("(") && token.EndsWith(")"))
                 {
                     var def = new ColumnDefinition();
-                    foreach (var subtoken in token[1..^1].Split(","))
+                    foreach (var subtoken in token.Substring(1, token.Length - 2).Split(','))
                     {
                         if (string.IsNullOrWhiteSpace(subtoken)) continue;
 
                         if (subtoken.Contains("="))
                         {
-                            var split = subtoken.Split("=");
+                            var split = subtoken.Split('=');
                             var key = split[0].ToLower().Trim();
                             var val = split[1].ToLower().Trim();
 
@@ -116,13 +116,13 @@ namespace MSHC.WPF.Controls
                 if (token.StartsWith("(") && token.EndsWith(")"))
                 {
                     var def = new RowDefinition();
-                    foreach (var subtoken in token[1..^1].Split(","))
+                    foreach (var subtoken in token.Substring(1, token.Length-2).Split(','))
                     {
                         if (string.IsNullOrWhiteSpace(subtoken)) continue;
 
                         if (subtoken.Contains("="))
                         {
-                            var split = subtoken.Split("=");
+                            var split = subtoken.Split('=');
                             var key = split[0].ToLower().Trim();
                             var val = split[1].ToLower().Trim();
 
@@ -170,7 +170,7 @@ namespace MSHC.WPF.Controls
         {
             if (gl == "*") return new GridLength(1, GridUnitType.Star);
 
-            if (REX_NUMBERS_STAR.IsMatch(gl)) return new GridLength(int.Parse(gl[0..^1]), GridUnitType.Star);
+            if (REX_NUMBERS_STAR.IsMatch(gl)) return new GridLength(int.Parse(gl.Substring(1, gl.Length - 2)), GridUnitType.Star);
 
             if (gl.ToLower() == "auto") return GridLength.Auto;
 

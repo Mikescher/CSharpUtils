@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSHC.WPFStub;
+using System;
 using System.Windows.Input;
 
 namespace MSHC.WPF.MVVM
@@ -6,7 +7,7 @@ namespace MSHC.WPF.MVVM
 	/// <summary>
 	/// http://stackoverflow.com/a/22286816/1761622
 	/// </summary>
-	public class RelayCommand<T> : ICommand
+	public class RelayCommand<T> : ICommand, ITypedCommand<T>
 	{
 		#region Fields
 
