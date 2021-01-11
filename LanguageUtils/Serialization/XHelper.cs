@@ -312,10 +312,31 @@ namespace AlephNote.PluginInterface.Util
 			return int.Parse(attr.Value);
 		}
 
+		public static bool GetAttributeBool(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return XElementExtensions.ParseBool(attr.Value);
+		}
+
 		public static DateTime GetAttributeDateTime(XElement elem, string attrname)
 		{
 			var attr = elem.Attribute(attrname);
 			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return DateTime.Parse(attr.Value);
+		}
+
+		public static DateTimeOffset GetAttributeDateTimeOffset(XElement elem, string attrname)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) throw new XMLStructureException("Attribute not found: " + attrname);
+			return DateTime.Parse(attr.Value);
+		}
+
+		public static DateTimeOffset GetAttributeDateTimeOffsetOrDefault(XElement elem, string attrname, DateTimeOffset defValue)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) return defValue;
 			return DateTime.Parse(attr.Value);
 		}
 
