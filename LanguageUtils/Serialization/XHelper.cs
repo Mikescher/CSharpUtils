@@ -305,6 +305,13 @@ namespace AlephNote.PluginInterface.Util
 			return attr.Value;
 		}
 
+		public static string GetAttributeStringOrDefault(XElement elem, string attrname, string defValue)
+		{
+			var attr = elem.Attribute(attrname);
+			if (attr == null) return defValue;
+			return attr.Value;
+		}
+
 		public static int GetAttributeInt(XElement elem, string attrname)
 		{
 			var attr = elem.Attribute(attrname);
