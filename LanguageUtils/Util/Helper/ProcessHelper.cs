@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MSHC.Util.Helper
 {
@@ -23,9 +25,17 @@ namespace MSHC.Util.Helper
 		public override string ToString() => $"{Command}\n=> {ExitCode}\n\n[stdout]\n{StdOut}\n\n[stderr]\n{StdErr}";
 	}
 	
+	public enum ProcessHelperStream
+    {
+		StdOut,
+		StdErr,
+    }
+
 	public static class ProcessHelper
 	{
-		public static ProcessOutput ProcExecute(string command, string arguments, string workingDirectory = null)
+		private static Regex REX_LINE = new Regex(@"\r?\n", RegexOptions.Compiled);
+
+		public static ProcessOutput ProcExecute(string command, string arguments, string workingDirectory = null, Action<ProcessHelperStream, string> listener = null)
 		{
 			var process = new Process
 			{
@@ -55,6 +65,11 @@ namespace MSHC.Util.Helper
 
 				if (builderBoth.Length == 0) builderBoth.Append(args.Data);
 				else builderBoth.Append("\n" + args.Data);
+
+				if (listener != null)
+				{
+					foreach (var line in REX_LINE.Split(args.Data)) listener(ProcessHelperStream.StdOut, args.Data);
+				}
 			};
 
 			process.ErrorDataReceived += (sender, args) =>
@@ -66,6 +81,11 @@ namespace MSHC.Util.Helper
 
 				if (builderBoth.Length == 0) builderBoth.Append(args.Data);
 				else builderBoth.Append("\n" + args.Data);
+
+				if (listener != null)
+				{
+					foreach (var line in REX_LINE.Split(args.Data)) listener(ProcessHelperStream.StdErr, args.Data);
+				}
 			};
 
 			process.Start();
