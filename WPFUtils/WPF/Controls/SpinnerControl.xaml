@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="MSHC.WPF.Controls.SpinnerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MSHC.WPF.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="64" d:DesignWidth="64">
+    <Grid x:Name="SpinnerRoot">
+        <Path Fill="{Binding Fill}" Width="{Binding Diameter}" Height="{Binding Diameter}" Margin="{Binding ItemRadius}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Path.Data>
+                <GeometryGroup x:Name="group">
+                </GeometryGroup>
+            </Path.Data>
+            <Path.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform X="{Binding Radius}" Y="{Binding Radius}"/>
+                    <RotateTransform x:Name="Rotation" Angle="0" CenterX="{Binding Radius}" CenterY="{Binding Radius}"/>
+                </TransformGroup>
+            </Path.RenderTransform>
+            <Path.Style>
+                <Style TargetType="Path">
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Path.Loaded">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Children[1].Angle" From="0" To="360" Duration="0:0:2" RepeatBehavior="Forever"/>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Path.Style>
+        </Path>
+    </Grid>
+</UserControl>
