@@ -15,14 +15,17 @@ namespace MSHC.WPF.Controls
      * or FixRowDefinitions="1* 4* auto"
      * or FixRowDefinitions="(Height=123, MinHeight=2, MaxHeight=999) (Height=33) Auto (*, SharedSizeGroup=MyGroup)"
      * or FixRowDefinitions="(Len=Auto, SSG=MyGroup) * (Len=Auto, SSG=MyGroup, Min=100)"
+     * or FixRowDefinitions="2*|my_group"
+     * or FixRowDefinitions="273|my_group"
      * 
      * (same for FixColumnDefinitions, with /s/Height/Width/g )
      * 
      **/
     public class FixGrid: Grid
     {
-        private static Regex REX_NUMBERS      = new Regex(@"^[0-9]+$", RegexOptions.Compiled);
-        private static Regex REX_NUMBERS_STAR = new Regex(@"^[0-9]+\*$", RegexOptions.Compiled);
+        private static Regex REX_NUMBERS         = new Regex(@"^[0-9]+$", RegexOptions.Compiled);
+        private static Regex REX_NUMBERS_STAR    = new Regex(@"^[0-9]+\*$", RegexOptions.Compiled);
+        private static Regex REX_GRIDLEN_GROUPED = new Regex(@"^(?:(?:(?:[0-9]+)?\*)|(auto)|([0-9]+))\|[a-z0-9_\-]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static readonly DependencyProperty FixColumnDefinitionsProperty = DependencyProperty.Register(
             "FixColumnDefinitions",
@@ -48,121 +51,80 @@ namespace MSHC.WPF.Controls
             set { SetValue(FixRowDefinitionsProperty, value); }
         }
 
-        private void OnFixColumnDefinitionsPropertyChanged(object e)
+        private void OnFixColumnDefinitionsPropertyChanged(object _)
         {
             this.ColumnDefinitions.Clear();
 
             foreach (var token in Tokenize(FixColumnDefinitions))
             {
-                if (token.StartsWith("(") && token.EndsWith(")"))
-                {
-                    var def = new ColumnDefinition();
-                    foreach (var subtoken in token.Substring(1, token.Length - 2).Split(','))
-                    {
-                        if (string.IsNullOrWhiteSpace(subtoken)) continue;
-
-                        if (subtoken.Contains("="))
-                        {
-                            var split = subtoken.Split('=');
-                            var key = split[0].ToLower().Trim();
-                            var val = split[1].ToLower().Trim();
-
-                            switch (key)
-                            {
-                                case "width":
-                                case "len":
-                                    def.Width = ParseGridLength(val);
-                                    break;
-
-                                case "minwidth":
-                                case "min":
-                                    def.MinWidth = int.Parse(val);
-                                    break;
-
-                                case "maxwidth":
-                                case "max":
-                                    def.MaxWidth = int.Parse(val);
-                                    break;
-
-                                case "sharedsizegroup":
-                                case "ssg":
-                                    def.SharedSizeGroup = val;
-                                    break;
-
-                                default:
-                                    throw new Exception("Invalid property: " + key);
-                            }
-                        }
-                        else
-                        {
-                            def.Width = ParseGridLength(subtoken);
-                        }
-                    }
-                    this.ColumnDefinitions.Add(def);
-                }
-                else
-                {
-                    this.ColumnDefinitions.Add(new ColumnDefinition { Width = ParseGridLength(token) });
-                }
+                this.ColumnDefinitions.Add(ParseDefinition(token, AnyDefinitionType.Column).ToColumnDefinition());
             }
         }
 
-        private void OnFixRowDefinitionsPropertyChanged(object e)
+        private void OnFixRowDefinitionsPropertyChanged(object _)
         {
             this.RowDefinitions.Clear();
 
             foreach (var token in Tokenize(FixRowDefinitions))
             {
-                if (token.StartsWith("(") && token.EndsWith(")"))
+                this.RowDefinitions.Add(ParseDefinition(token, AnyDefinitionType.Row).ToRowDefinition());
+            }
+        }
+
+        private static AnyDefinition ParseDefinition(string token, AnyDefinitionType adt)
+        {
+            if (token.StartsWith("(") && token.EndsWith(")"))
+            {
+                var def = new AnyDefinition();
+                foreach (var subtoken in token.Substring(1, token.Length - 2).Split(','))
                 {
-                    var def = new RowDefinition();
-                    foreach (var subtoken in token.Substring(1, token.Length-2).Split(','))
+                    if (string.IsNullOrWhiteSpace(subtoken)) continue;
+
+                    if (subtoken.Contains("="))
                     {
-                        if (string.IsNullOrWhiteSpace(subtoken)) continue;
+                        var split = subtoken.Split('=');
+                        var key = split[0].ToLower().Trim();
+                        var val = split[1].ToLower().Trim();
 
-                        if (subtoken.Contains("="))
+                        if (key == "len" || (adt==AnyDefinitionType.Column && key == "width") || (adt == AnyDefinitionType.Row && key == "height"))
                         {
-                            var split = subtoken.Split('=');
-                            var key = split[0].ToLower().Trim();
-                            var val = split[1].ToLower().Trim();
-
-                            switch (key)
-                            {
-                                case "height":
-                                case "len":
-                                    def.Height = ParseGridLength(val);
-                                    break;
-
-                                case "minheight":
-                                case "min":
-                                    def.MinHeight = int.Parse(val);
-                                    break;
-
-                                case "maxheight":
-                                case "max":
-                                    def.MaxHeight = int.Parse(val);
-                                    break;
-
-                                case "sharedsizegroup":
-                                case "ssg":
-                                    def.SharedSizeGroup = val;
-                                    break;
-
-                                default:
-                                    throw new Exception("Invalid property: " + key);
-                            }
+                            def.Value = ParseGridLength(val);
+                        }
+                        else if (key == "min" || (adt == AnyDefinitionType.Column && key == "minwidth") || (adt == AnyDefinitionType.Row && key == "minheight"))
+                        {
+                            def.Min = int.Parse(val);
+                        }
+                        else if (key == "max" || (adt == AnyDefinitionType.Column && key == "maxwidth") || (adt == AnyDefinitionType.Row && key == "maxheight"))
+                        {
+                            def.Max = int.Parse(val);
+                        }
+                        else if (key == "ssg" || key == "sharedsizegroup")
+                        {
+                            def.SharedSizeGroup = val;
                         }
                         else
                         {
-                            def.Height = ParseGridLength(subtoken);
+                            throw new Exception("Invalid property: " + key);
                         }
                     }
-                    this.RowDefinitions.Add(def);
+                    else
+                    {
+                        def.Value = ParseGridLength(subtoken);
+                    }
                 }
-                else
-                {
-                    this.RowDefinitions.Add(new RowDefinition { Height = ParseGridLength(token) });
-                }
+                return def;
+            }
+            else if (REX_GRIDLEN_GROUPED.IsMatch(token))
+            {
+                var split = token.Split('|');
+                if (split.Length != 2) throw new Exception("Invalid annotated len: " + token);
+
+                return new AnyDefinition { Value = ParseGridLength(split[0]), SharedSizeGroup = split[1] };
+
+            }
+            else
+            {
+                return new AnyDefinition { Value = ParseGridLength(token) };
             }
         }
 
@@ -225,4 +187,34 @@ namespace MSHC.WPF.Controls
             if (sb.Length > 0) { yield return sb.ToString(); sb.Clear(); }
         }
     }
+}
+
+internal enum AnyDefinitionType
+{
+    Column,
+    Row,
+}
+
+internal class AnyDefinition
+{
+    public GridLength Value = new GridLength(1, GridUnitType.Star);
+    public double Min = 0;
+    public double Max = float.PositiveInfinity;
+    public string SharedSizeGroup = null;
+
+    public RowDefinition ToRowDefinition() => new RowDefinition
+    {
+        Height = Value,
+        MinHeight = Min,
+        MaxHeight = Max,
+        SharedSizeGroup = SharedSizeGroup,
+    };
+
+    public ColumnDefinition ToColumnDefinition() => new ColumnDefinition
+    {
+        Width = Value,
+        MinWidth = Min,
+        MaxWidth = Max,
+        SharedSizeGroup = SharedSizeGroup,
+    };
 }
