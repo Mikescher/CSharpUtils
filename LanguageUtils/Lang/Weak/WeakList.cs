@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MSHC.Lang.Collections;
+using MSHC.Lang.Extensions;
 
 namespace MSHC.Lang.Weak
 {
