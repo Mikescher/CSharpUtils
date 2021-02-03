@@ -108,5 +108,16 @@ namespace MSHC.Lang.Extensions
             }
             return result;
         }
+        
+        public static bool ContainsIgnoreCase(this IEnumerable<string> source, string cmp)
+        {
+	        foreach (var curr in source)
+	        {
+		        if (string.Equals(curr, cmp, StringComparison.CurrentCultureIgnoreCase)) return true;
+	        }
+
+	        return false;
+        }
+
     }
 }
