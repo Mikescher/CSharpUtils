@@ -173,6 +173,10 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
+# VSCode
+
+/.vs/*
+
 #################### CUSTOM ##############
 
 *.patch

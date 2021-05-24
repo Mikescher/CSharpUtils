@@ -132,7 +132,7 @@ namespace MSHC.WPF.Controls
         {
             if (gl == "*") return new GridLength(1, GridUnitType.Star);
 
-            if (REX_NUMBERS_STAR.IsMatch(gl)) return new GridLength(int.Parse(gl.Substring(1, gl.Length - 2)), GridUnitType.Star);
+            if (REX_NUMBERS_STAR.IsMatch(gl)) return new GridLength(int.Parse(gl.Substring(0, gl.Length - 1)), GridUnitType.Star);
 
             if (gl.ToLower() == "auto") return GridLength.Auto;
 
