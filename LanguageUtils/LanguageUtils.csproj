@@ -1,9 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <UseWPF>true</UseWPF>
     <RootNamespace>MSHC</RootNamespace>
+
+    <SuppressImplicitGitSourceLink>true</SuppressImplicitGitSourceLink>
 
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <FileVersion>4.0.0.0</FileVersion>
