@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -55,13 +56,14 @@ namespace MSHC.Util.Helper
 			if (Directory.EnumerateFileSystemEntries(folder).Any()) return;
 
 			Directory.Delete(folder);
-		}
+		}		
 
 		public static string MakePathRelative(string fromPath, string baseDir)
 		{
-			const string pathSep = "\\";
-			string[] p1 = Regex.Split(fromPath, "[\\\\/]").Where(x => x.Length != 0).ToArray();
-			string[] p2 = Regex.Split(baseDir, "[\\\\/]").Where(x => x.Length != 0).ToArray();
+			string pathSep = System.IO.Path.DirectorySeparatorChar.ToString();
+			
+			string[] p1 = Regex.Split(fromPath, @"[\\/]").Where(x => x.Length != 0).ToArray();
+			string[] p2 = Regex.Split(baseDir, @"[\\/]").Where(x => x.Length != 0).ToArray();
 
 			int i = 0;
 			for (; i < p1.Length && i < p2.Length; i++)
