@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -7,7 +9,7 @@ namespace MSHC.Util.Helper
 {
 	public struct ProcessOutput
 	{
-		public readonly string Command;
+		public readonly string CommandString;
 		public readonly int ExitCode;
 		public readonly string StdOut;
 		public readonly string StdErr;
@@ -15,14 +17,14 @@ namespace MSHC.Util.Helper
 		
 		public ProcessOutput(string cmd, int ex, string stdout, string stderr, string stdcom)
 		{
-			Command = cmd;
+			CommandString = cmd;
 			ExitCode = ex;
 			StdOut = stdout;
 			StdErr = stderr;
 			StdCombined = stdcom;
 		}
 
-		public override string ToString() => $"{Command}\n=> {ExitCode}\n\n[stdout]\n{StdOut}\n\n[stderr]\n{StdErr}";
+		public override string ToString() => $"{CommandString}\n=> {ExitCode}\n\n[stdout]\n{StdOut}\n\n[stderr]\n{StdErr}";
 	}
 	
 	public enum ProcessHelperStream
@@ -37,19 +39,44 @@ namespace MSHC.Util.Helper
 
 		public static ProcessOutput ProcExecute(string command, string arguments, string workingDirectory = null, Action<ProcessHelperStream, string> listener = null)
 		{
+			var psi = new ProcessStartInfo
+			{
+				FileName = command,
+				Arguments = arguments,
+				WorkingDirectory = workingDirectory ?? string.Empty,
+				UseShellExecute = false,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				CreateNoWindow = true,
+				ErrorDialog = false,
+			};
+
+			return _procExecute(psi, $"{command} {arguments.Replace("\r", "\\r").Replace("\n", "\\n")}", listener);
+		}
+		
+		public static ProcessOutput ProcExecute(string command, IEnumerable<string> arguments, string workingDirectory = null, Action<ProcessHelperStream, string> listener = null)
+		{
+			arguments = arguments.ToList();
+			var psi = new ProcessStartInfo
+			{
+				FileName = command,
+				WorkingDirectory = workingDirectory ?? string.Empty,
+				UseShellExecute = false,
+				RedirectStandardOutput = true,
+				RedirectStandardError = true,
+				CreateNoWindow = true,
+				ErrorDialog = false,
+			};
+			foreach (var a in arguments) psi.ArgumentList.Add(a);
+			
+			return _procExecute(psi, $"{command} {string.Join(" ", arguments.Select(p => "'"+p+"'"))}", listener);
+		}
+		
+		private static ProcessOutput _procExecute(ProcessStartInfo psi, string cmdstr, Action<ProcessHelperStream, string> listener = null)
+		{
 			var process = new Process
 			{
-				StartInfo =
-				{
-					FileName = command,
-					Arguments = arguments,
-					WorkingDirectory = workingDirectory ?? string.Empty,
-					UseShellExecute = false,
-					RedirectStandardOutput = true,
-					RedirectStandardError = true,
-					CreateNoWindow = true,
-					ErrorDialog = false,
-				}
+				StartInfo = psi,
 			};
 
 			var builderOut = new StringBuilder();
@@ -95,7 +122,7 @@ namespace MSHC.Util.Helper
 
 			process.WaitForExit();
 
-			return new ProcessOutput($"{command} {arguments.Replace("\r", "\\r").Replace("\n", "\\n")}", process.ExitCode, builderOut.ToString(), builderErr.ToString(), builderBoth.ToString());
+			return new ProcessOutput(cmdstr, process.ExitCode, builderOut.ToString(), builderErr.ToString(), builderBoth.ToString());
 		}
 	}
 }
