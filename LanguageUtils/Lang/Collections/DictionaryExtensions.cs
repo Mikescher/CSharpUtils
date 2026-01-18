@@ -10,5 +10,11 @@ namespace MSHC.Lang.Collections
             dict.Add(key, val);
             return true;
         }
+
+        public static TVal GetValueOrNew<TKey, TVal>(this IDictionary<TKey, TVal> dict, TKey key) where TVal : new()
+        {
+            if (dict.TryGetValue(key, out var val)) return val;
+            return new TVal();
+        }
     }
 }
